@@ -212,7 +212,7 @@ def main():
                     event, values = window.read()
                     if event == sg.WIN_CLOSED or event == 'Cancel':  # if user closes window or clicks cancel
                         print('INFO: The script will now close...')
-                        window.read(timeout=3000)
+                        time.sleep(3)
                         break
                     window.close()
 
@@ -351,8 +351,7 @@ def main():
                     except:
                         print('INFO MP3: This Audiobook as No Author, probably no tags are present.')
                         print('ERROR MP3: No need for this script. Quiting.')
-
-                        window.read(timeout=4000)
+                        time.sleep(4)
                         quit()
 
                     # Narrator/composer
@@ -672,11 +671,11 @@ def main():
                     with open(path_to_image + '/' + newadded.replace('/', '-') + '.jpg', 'wb') as img:
                         img.write(artwork)
                         print('INFO-img.created: Image Created to folder named:', path_to_image)
-                        window.read(timeout=2000)
+                        time.sleep(3)
 
                 for image_filename in find_files(folder_path, '*.jpg'):
                     print('INFO-IMG: Image found from created image:', image_filename)
-                    window.read(timeout=2000)
+                    time.sleep(3)
             else:
                 pass
 
@@ -1092,7 +1091,8 @@ def main():
             #     move_all_files_in_dir(folder_path, 'T:')
             #     print("Folder Moved to T:")
             #
-            # print('INFO: End of script, please check values before pressing the button to upload.')
+            print('INFO: End of script, please check values before pressing the button to upload.')
+            input("Press Enter to Quit...")
             # window.read(timeout=10000)
     # Console close
     window.close()
