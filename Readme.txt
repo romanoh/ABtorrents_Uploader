@@ -1,5 +1,5 @@
 Beta v.0.2.6
-[20.02.21] CHG: A small change to the progress bar.
+[20.02.21] CHG: A small change to the progress bar and layout.
 
 Beta v.0.2.5 - ABtorrents uploader Helper
 [18.02.21] NEW: Added Progress Bar in creating torrent.
