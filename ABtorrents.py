@@ -30,7 +30,7 @@ sg.theme('Dark Blue 3')
 def main():
     layout = [
         [sg.Output(size=(110, 30), background_color='#2b2b2b', text_color='#a5b3c2')],
-        [sg.T('Promt> '), sg.Input('Press button to start script', key='-IN-', do_not_clear=False)],
+        # [sg.T('Promt> '), sg.Input('Press button to start script', key='-IN-', do_not_clear=False)],
         [sg.Button('Start Script', bind_return_key=True), sg.Button('Exit')]]
 
     window = sg.Window(script_version, layout, icon=r"favicon.ico")
