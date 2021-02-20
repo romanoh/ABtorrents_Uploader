@@ -814,7 +814,7 @@ def main():
                 pyautogui.write(image_filename)
                 time.sleep(5)
                 pyautogui.press('enter')
-                time.sleep(4)
+                time.sleep(8)
             # --------------------------------------------------------------------------
 
             # introduzir o nome da serie do audiobook na pagina dos uploads
@@ -1092,9 +1092,10 @@ def main():
             #     print("Folder Moved to T:")
             #
             print('INFO: End of script, please check values before pressing the button to upload.')
-            input("Press Enter to Quit...")
+
             # window.read(timeout=10000)
     # Console close
+    # input("Press Enter to Quit...")
     window.close()
 
 
