@@ -23,6 +23,22 @@ import sys
 script_version = 'Beta v.0.2.6 - ABtorrents uploader Helper'
 script_version_short = 'Beta v.0.2.6'
 
+
+# Print to Log file(log.log) and terminal
+class Logger(object):
+    def __init__(self):
+        self.terminal = sys.stdout
+        self.log = open("log.log", "a")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+
 # Start everything in console
 sg.theme('Dark Blue 3')
 
@@ -38,6 +54,9 @@ def main():
     while True:  # Event Loop
         event, values = window.read()
         # print(event, values)
+
+        # start printing to file
+        sys.stdout = Logger()
 
         if event in (sg.WIN_CLOSED, 'Exit'):
             print('INFO: The script will now close...')
@@ -247,7 +266,7 @@ def main():
             # ------------------------------------------------------------------------------
             # find Nfo
 
-            print("INFO: Starting looking for nfo file(s)....")
+            print("INFO.NFO: Starting looking for NFO file(s)....")
 
             # nfo files Path
             def find_files(directory, pattern):
@@ -260,15 +279,16 @@ def main():
 
             if file_path == '':
                 for nfofile in find_files(folder_path, '*.nfo'):
-                    print('INFO-NFO-folder: Found NFO audio source:', nfofile)
+                    print('INFO.NFO-folder: Found NFO audio source:', nfofile)
 
-                try:
-                    nfofile
-                except:
-                    print('ERROR-NFO-folder: NFO file not present...')
+                if nfofile is None:
+                    print('WARNING.NFO.folder: NFO file not present...')
                     nfofile = "No NFO present"
+                else:
+                    pass
+
             else:
-                print('INFO-NFO-file: Data will be from file metadata.')
+                print('INFO.NFO.file: Data will be from file metadata.')
                 pass
 
             # -----------------------------------------------------------------------
@@ -614,6 +634,7 @@ def main():
 
                     nfo_full = f.info.pprint()
                     print('INFO MB4: Full audio stream information:', nfo_full)
+                    time.sleep(3)
 
             # para terminar o script
             # raise SystemExit(0)
@@ -976,7 +997,7 @@ def main():
             meta.write('File Type: ' + nfo_audio + '\n')
             meta.write('Bitrate: ' + nfo_bitrate + '\n')
             meta.write('Full technical: ' + nfo_full + '\n')
-            meta.write('[size=1]' + script_version_short + '[/size]')
+            meta.write('[size=1]' + script_version + '[/size]')
             meta.close()
 
             file = 'metadata_' + nfo_album + '.txt'

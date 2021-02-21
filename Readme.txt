@@ -1,5 +1,7 @@
 Beta v.0.2.6
+[21.02.21] NEW: Print to Log file(log.log) and terminal.
 [20.02.21] CHG: A small change to the progress bar and layout.
+[20.02.21] CHG: Add more time to Image to upload for the cases the firefox is slow.
 
 Beta v.0.2.5
 [18.02.21] NEW: Added Progress Bar in creating torrent.
