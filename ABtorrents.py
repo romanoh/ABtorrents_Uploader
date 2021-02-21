@@ -24,20 +24,16 @@ script_version = 'Beta v.0.2.6 - ABtorrents uploader Helper'
 script_version_short = 'Beta v.0.2.6'
 
 
-# Print to Log file(log.log) and terminal
-class Logger(object):
-    def __init__(self):
-        self.terminal = sys.stdout
-        self.log = open("log.log", "a")
+# If error pauses script
+def show_exception_and_exit(exc_type, exc_value, tb):
+    import traceback
+    traceback.print_exception(exc_type, exc_value, tb)
+    input("Press key to exit.")
+    sys.exit(-1)
 
-    def write(self, message):
-        self.terminal.write(message)
-        self.log.write(message)
 
-    def flush(self):
-        self.terminal.flush()
-        self.log.flush()
-
+sys.excepthook = show_exception_and_exit
+# END If error pauses script
 
 # Start everything in console
 sg.theme('Dark Blue 3')
@@ -54,9 +50,6 @@ def main():
     while True:  # Event Loop
         event, values = window.read()
         # print(event, values)
-
-        # start printing to file
-        sys.stdout = Logger()
 
         if event in (sg.WIN_CLOSED, 'Exit'):
             print('INFO: The script will now close...')
@@ -146,9 +139,11 @@ def main():
 
                 t.private = True
 
-                animation = ["■□□□□□□□□□", "■■□□□□□□□□", "■■■□□□□□□□", "■■■■□□□□□□",
-                             "■■■■■□□□□□", "■■■■■■□□□□", "■■■■■■■□□□", "■■■■■■■■□□",
-                             "■■■■■■■■■□", "■■■■■■■■■■"]
+                # animation = ["■□□□□□□□□□", "■■□□□□□□□□", "■■■□□□□□□□", "■■■■□□□□□□",
+                #              "■■■■■□□□□□", "■■■■■■□□□□", "■■■■■■■□□□", "■■■■■■■■□□",
+                #              "■■■■■■■■■□", "■■■■■■■■■■"]
+
+                animation = ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"]
 
                 for i in range(len(animation)):
                     time.sleep(0.2)
