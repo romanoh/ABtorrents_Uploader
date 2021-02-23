@@ -113,11 +113,13 @@ event, values = window.read()
 if event == sg.WIN_CLOSED or event == 'Cancel':  # if user closes window or clicks cancel
     logger_path.warning('You have canceled or closed the window the script will now close...')
     window.read(timeout=3000)
-
+    raise SystemExit(0)
 window.close()
 
 if values[0] == '' and values[1] == '':
     sg.popup_error('You did not enter anything, so exit is in order!')
+    logger_path.warning('All the paths were empty, the script will now close...')
+    raise SystemExit(0)
 
 else:
     # values[0] is the variable for the folder path
