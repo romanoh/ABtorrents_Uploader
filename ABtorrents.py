@@ -19,10 +19,30 @@ import configparser
 from pathlib import Path
 import codecs
 import sys
+import logging
 
 script_version = 'Beta v.0.2.6 - ABtorrents uploader Helper'
 script_version_short = 'Beta v.0.2.6'
 
+# set up logging to file
+logging.basicConfig(level=logging.INFO,
+                    format='%(levelname)-8s%(asctime)s %(name)-12s %(message)s',
+                    datefmt='%d-%m-%y (%H:%M)',
+                    filename='log.log',
+                    filemode='w')
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(levelname)-8s%(asctime)s %(name)-8s %(message)s', "%H:%M:%S")
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+
+logger_config = logging.getLogger('config')
+logger_path = logging.getLogger('paths')
+logger_torrent = logging.getLogger('torrent')
 
 # If error pauses script
 def show_exception_and_exit(exc_type, exc_value, tb):
@@ -35,10 +55,13 @@ def show_exception_and_exit(exc_type, exc_value, tb):
 sys.excepthook = show_exception_and_exit
 # END If error pauses script
 
+# ------------------------------------------------------------
+# Log Version
+logging.info('Script Version: %s', script_version)
 
-print('Script Version:', script_version)
+# ------------------------------------------------------------
 
-# Settings
+# Config
 # update the config file
 config = configparser.ConfigParser()
 
@@ -55,7 +78,7 @@ if not os.path.exists('config.ini'):  # if it is not present
     config['LOGIN']['username'] = "0"
     config['LOGIN']['password'] = "0"
 
-    print('INFO ini: Config file created.')
+    logger_config.info('Ini Config file created.')
 
     config.write(open('config.ini', 'w'))
 
@@ -63,7 +86,7 @@ if not os.path.exists('config.ini'):  # if it is not present
     torrent_file = config['FOLDERS']['torrent_file']  # make files
     login_session = config['LOGIN']['firefox_profile']  # profile firefox link
 else:
-    print('INFO ini: The config.ini is present.')
+    logger_config.info('The config.ini is present.')
 
     config.read(r'config.ini')
 
@@ -71,16 +94,16 @@ else:
     torrent_file = config['FOLDERS']['torrent_file']
     login_session = config['LOGIN']['firefox_profile']
 # ----------------------------------------------------------------------------
-
+# Paths
 folder_path = None
 file_path = None
 
-print('INFO: Enter your folder or file...')
+logger_path.info('Please enter your folder or file...')
 
 # Choose torrent folder
 sg.theme('Dark Blue 3')  # please make your windows colorful
 layout = [[sg.Text('Here you can choose folder or file to make a torrent.')],
-          [sg.Text('Later you can choose a path for the .torrent')],
+          [sg.Text('Later you can choose a path for the .torrent if not in config.')],
           [sg.Text('Folder:', size=(10, 1)), sg.InputText(), sg.FolderBrowse()],
           [sg.Text('File:', size=(10, 1)), sg.InputText(), sg.FileBrowse()],
           [sg.Submit(), sg.Cancel()]]
@@ -88,7 +111,7 @@ window = sg.Window(script_version_short, layout, icon=r"favicon.ico", finalize=T
 
 event, values = window.read()
 if event == sg.WIN_CLOSED or event == 'Cancel':  # if user closes window or clicks cancel
-    print('INFO: The script will now close...')
+    logger_path.warning('You have canceled or closed the window the script will now close...')
     window.read(timeout=3000)
 
 window.close()
@@ -99,15 +122,15 @@ if values[0] == '' and values[1] == '':
 else:
     # values[0] is the variable for the folder path
     folder_path = values[0]  # get the data from the values dictionary
-    print('INFO-Watch: Folder:', folder_path)
+    logger_path.info('Folder path was set: %s', folder_path)
 
     # values[1] is the variable for the file path
     file_path = values[1]  # get the data from the values dictionary
-    print('INFO-Watch: File:', file_path)
+    logger_path.info('File path: %s', file_path)
 
 # if the file path as nothing create the the torrent from folder torrent
 if file_path == '':
-    print('INFO-Tor: Creating Torrent...please wait')
+    logger_torrent.info('Creating Torrent from folder...please wait')
 
     # Make torrent from folder
     t = Torrent(path=folder_path,
@@ -243,6 +266,7 @@ else:
 
 print("INFO.NFO: Starting looking for NFO file(s)....")
 
+
 # nfo files Path
 def find_files(directory, pattern):
     for root, dirs, files in os.walk(directory):
@@ -251,6 +275,7 @@ def find_files(directory, pattern):
                 # nfo_filename = os.path.join(basename)
                 nfofile = os.path.join(root, basename)  # Para full path
                 yield nfofile
+
 
 if file_path == '':
     for nfofile in find_files(folder_path, '*.nfo'):
@@ -273,6 +298,7 @@ else:
 print("INFO: Starting looking for audio file(s)....")
 audio_filename = None
 
+
 # audio files Path
 def find_files(directory, pattern):
     for root, dirs, files in os.walk(directory):
@@ -281,6 +307,7 @@ def find_files(directory, pattern):
                 # nfo_filename = os.path.join(basename)
                 audio_filename = os.path.join(root, basename)  # Para full path
                 yield audio_filename
+
 
 if file_path == '':
     for audio_filename in find_files(folder_path, '*.mp3'):
@@ -621,6 +648,7 @@ else:
 print("INFO.IMG: Starting looking for Cover file(s)....")
 image_filename = None
 
+
 # audio files Path
 def find_files(directory, pattern):
     for root, dirs, files in os.walk(directory):
@@ -629,6 +657,7 @@ def find_files(directory, pattern):
                 # nfo_filename = os.path.join(basename)
                 image_filename = os.path.join(root, basename)  # Para full path
                 yield image_filename
+
 
 for image_filename in find_files(folder_path, '*.jpeg'):
     print('INFO img: Found Image named JPEG:', image_filename)
@@ -1092,4 +1121,3 @@ print('INFO: End of script, please check values before pressing the button to up
 # window.read(timeout=10000)
 # Console close
 input("Press Enter to Quit...")
-

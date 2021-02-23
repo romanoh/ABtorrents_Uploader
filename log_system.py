@@ -1,6 +1,6 @@
 import logging
 
-# set up logging to file - see previous section for more details
+# set up logging to file
 logging.basicConfig(level=logging.DEBUG,
                     format='%(levelname)-8s%(asctime)s %(name)-12s %(message)s',
                     datefmt='%d-%m-%y (%H:%M)',
@@ -29,3 +29,5 @@ logger1.debug('Quick zephyrs blow, vexing daft Jim.')
 logger1.info('How quickly daft jumping zebras vex.')
 logger2.warning('Jail zesty vixen who grabbed pay from quack.')
 logger2.error('The five boxing wizards jump quickly.')
+
+input('hhhh')
