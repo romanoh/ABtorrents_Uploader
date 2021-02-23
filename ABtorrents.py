@@ -749,7 +749,7 @@ driver.get("https://www.abtorrents.me/upload_audiobook.php")
 
 # primeiro fazemos login no site
 # usernameStr = 'romano'
-# passwordStr = '29fc6fd157cee893c72c22826dde94e1'
+# passwordStr = 'xxxxxxxxx'
 #
 # username = driver.find_element_by_xpath('/html/body/table/tbody/tr/td/div/form/table/tbody/tr[1]/td[2]/input')
 # username.send_keys(usernameStr)
