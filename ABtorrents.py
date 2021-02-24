@@ -21,8 +21,8 @@ import codecs
 import sys
 import logging
 
-script_version = 'Beta v.0.2.6 - ABtorrents uploader Helper'
-script_version_short = 'Beta v.0.2.6'
+script_version = 'Beta v.0.2.7 - ABtorrents uploader Helper'
+script_version_short = 'Beta v.0.2.7'
 
 # set up logging to file
 logging.basicConfig(level=logging.INFO,
@@ -43,6 +43,8 @@ logging.getLogger('').addHandler(console)
 logger_config = logging.getLogger('config')
 logger_path = logging.getLogger('paths')
 logger_torrent = logging.getLogger('torrent')
+logger_nfo = logging.getLogger('nfo')
+
 
 # If error pauses script
 def show_exception_and_exit(exc_type, exc_value, tb):
@@ -139,7 +141,7 @@ if file_path == '':
                 trackers=['https://abtorrents.me:2910/announce'],
                 comment='In using this torrent you are bound by the ABTorrents Confidentiality Agreement '
                         'By Law')
-    # Excluir nfo files
+    # Exclude nfo files
     t.exclude_globs.append('*.nfo')
 
     t.private = True
@@ -196,21 +198,20 @@ if file_path == '':
     file = path_to_torrent + '/' + torrent_folder + '.torrent'
     if os.path.exists(file):
         os.remove(file)
-        print('INFO CLEAN: Delete old .torrent file.')
+        logger_torrent.info('Deleting old .torrent file present.')
+
     else:
         pass
 
     t.write(path_to_torrent + '/' + torrent_folder + '.torrent')
-    print('INFO TORRENT: The file is made.')
+    logger_torrent.info('The .torrent file is created.')
     newadded = torrent_folder
 
 
 else:
+    logger_torrent.info('Creating Torrent...please wait.')
 
-    print('debug: file_path:', file_path)
-    print('INFO-Tor: Creating Torrent...please wait.')
-
-    # fazer o torrent com o ficheiro singular
+    # make .torrent single file
     t = Torrent(path=file_path,
                 trackers=['https://abtorrents.me:2910/announce'],
                 comment='In using this torrent you are bound by the ABTorrents Confidentiality Agreement '
@@ -230,7 +231,7 @@ else:
 
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == 'Cancel':  # if user closes window or clicks cancel
-            print('INFO: The script will now close...')
+            logger_torrent.warning('The script will now close...')
             time.sleep(3)
             sys.exit()
         window.close()
@@ -240,7 +241,7 @@ else:
             sys.exit()
         else:
             path_to_torrent_file = values[0]
-            print('debud path to torrent file 160 :', path_to_torrent_file)
+            logger_torrent.info('Path to torrent file: %s', path_to_torrent_file)
 
             # update the config file
             config = configparser.ConfigParser()
@@ -253,20 +254,19 @@ else:
 
     else:
         path_to_torrent_file = torrent_file
-        print('INFO: file path:', path_to_torrent_file)
+        logger_torrent.info('File path: %s', path_to_torrent_file)
 
     file_path2 = Path(file_path).stem  # only the file name
     t.write(path_to_torrent_file + '/' + file_path2 + '.torrent')
-    print('INFO-Torrent.file: The file is made.')
+    logger_torrent.info('The file was created.')
     newadded = file_path2
-    print('debug:125', torrent_file)
+
 # para terminar o script
 # raise SystemExit(0)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # find Nfo
-
-print("INFO.NFO: Starting looking for NFO file(s)....")
+logger_nfo.info('Starting looking for NFO file(s)....')
 
 
 # nfo files Path
@@ -281,16 +281,16 @@ def find_files(directory, pattern):
 
 if file_path == '':
     for nfofile in find_files(folder_path, '*.nfo'):
-        print('INFO.NFO-folder: Found NFO audio source:', nfofile)
+        logger_nfo.info('Found NFO audio source: %s', nfofile)
 
     if nfofile is None:
-        print('WARNING.NFO.folder: NFO file not present...')
+        logger_nfo.warning('NFO file not present...')
         nfofile = "No NFO present"
     else:
         pass
 
 else:
-    print('INFO.NFO.file: Data will be from file metadata.')
+    logger_nfo.info('Metadata will be made from audio file metadata.')
     pass
 
 # -----------------------------------------------------------------------
@@ -749,7 +749,7 @@ driver.get("https://www.abtorrents.me/upload_audiobook.php")
 
 # primeiro fazemos login no site
 # usernameStr = 'romano'
-# passwordStr = 'xxxxxxxxx'
+# passwordStr = 'xxxxxxxxxx'
 #
 # username = driver.find_element_by_xpath('/html/body/table/tbody/tr/td/div/form/table/tbody/tr[1]/td[2]/input')
 # username.send_keys(usernameStr)
