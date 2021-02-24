@@ -44,6 +44,7 @@ logger_config = logging.getLogger('config')
 logger_path = logging.getLogger('paths')
 logger_torrent = logging.getLogger('torrent')
 logger_nfo = logging.getLogger('nfo')
+logger_audio = logging.getLogger('audiofile')
 
 
 # If error pauses script
@@ -296,8 +297,8 @@ else:
 # -----------------------------------------------------------------------
 # -----------------------------------------------------------------------
 # Find audio files
+logger_audio.info('Starting looking for audio file(s)....')
 
-print("INFO: Starting looking for audio file(s)....")
 audio_filename = None
 
 
@@ -313,23 +314,23 @@ def find_files(directory, pattern):
 
 if file_path == '':
     for audio_filename in find_files(folder_path, '*.mp3'):
-        print('INFO: Found MP3 audio source:', audio_filename)
+        logger_audio.info('Found MP3 audio source: %s', audio_filename)
     for audio_filename in find_files(folder_path, '*.m4b'):
-        print('INFO: Found M4B audio source:', audio_filename)
+        logger_audio.info('Found M4B audio source: %s', audio_filename)
+
 else:
     audio_filename = file_path
 
 if not audio_filename:
-    print('ERROR: Audio files not present...')
+    logger_audio.error('Audio files not present...')
 else:
-    musicfile = audio_filename  # path to audio files
-    f = mutagen.File(musicfile)
-    samplerate = f.info.sample_rate
-    print(samplerate)
+    f = mutagen.File(audio_filename)
+    # samplerate = f.info.sample_rate
+    # print(samplerate)
 
     # if it is not MP3 move to MP4
     try:
-        audio = ID3(musicfile)  # path: path to file
+        audio = ID3(audio_filename)  # path: path to file
         # Here is the info from de audio file MP3
         print('INFO MP3: MP3 found.')
 
@@ -472,7 +473,7 @@ else:
 
     except:
         # MP4
-        mp4_audio = MP4(musicfile)  # path: path to file
+        mp4_audio = MP4(audio_filename)  # path: path to file
         # no tag in MB4
         nfo_encoder = ''
 
@@ -1118,7 +1119,9 @@ else:
 #     move_all_files_in_dir(folder_path, 'T:')
 #     print("Folder Moved to T:")
 #
-print('INFO: End of script, please check values before pressing the button to upload.')
+#
+logging.info('End of script, please check values before pressing the button to upload.')
+logging.info('Thank you for using %s', script_version)
 
 # window.read(timeout=10000)
 # Console close

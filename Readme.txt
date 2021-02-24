@@ -1,9 +1,8 @@
 Beta v.0.2.7
-
-
+[24.02.21] STR: Still improving log system.
 
 Beta v.0.2.6
-[23.02.21] NEW: Start working in logging system instead of printing.
+[23.02.21] STR: Start working in logging system instead of printing.
 [22.02.21] CHG: Remove the console because was giving much trouble, maybe later.
 [22.02.21] FIX: Some small fixes to code.
 [21.02.21] NEW: If error pauses script to see error.
