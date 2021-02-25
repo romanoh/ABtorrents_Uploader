@@ -128,11 +128,19 @@ if values[0] == '' and values[1] == '':
 else:
     # values[0] is the variable for the folder path
     folder_path = values[0]  # get the data from the values dictionary
-    logger_path.info('Folder path was set: %s', folder_path)
+
+    if folder_path == '':
+        pass
+    else:
+        logger_path.info('Folder path was set: %s', folder_path)
 
     # values[1] is the variable for the file path
     file_path = values[1]  # get the data from the values dictionary
-    logger_path.info('File path: %s', file_path)
+
+    if file_path == '':
+        pass
+    else:
+        logger_path.info('File path is: %s', file_path)
 
 # if the file path as nothing create the the torrent from folder torrent
 if file_path == '':
@@ -219,7 +227,17 @@ else:
                 comment='In using this torrent you are bound by the ABTorrents Confidentiality Agreement '
                         'By Law')
     t.private = True
-    t.generate()
+    # animation = ["■□□□□□□□□□", "■■□□□□□□□□", "■■■□□□□□□□", "■■■■□□□□□□",
+    #              "■■■■■□□□□□", "■■■■■■□□□□", "■■■■■■■□□□", "■■■■■■■■□□",
+    #              "■■■■■■■■■□", "■■■■■■■■■■"]
+
+    animation = ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"]
+
+    for i in range(len(animation)):
+        time.sleep(0.2)
+        sys.stdout.write("\r" + animation[i % len(animation)] + "\n")
+        sys.stdout.flush()
+        t.generate()
 
     # get the file name to make the torrent name
 

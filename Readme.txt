@@ -1,7 +1,7 @@
 Beta v.0.2.7
 [25.02.21] FIX: Some small fixes to code.
+[25.02.21] NEW: Add Progress Bar to file torrent.
 [24.02.21] STR: Still improving log system.
-
 
 Beta v.0.2.6
 [23.02.21] STR: Start working in logging system instead of printing.
