@@ -45,6 +45,7 @@ logger_path = logging.getLogger('paths')
 logger_torrent = logging.getLogger('torrent')
 logger_nfo = logging.getLogger('nfo')
 logger_audio = logging.getLogger('audiofile')
+logger_meta = logging.getLogger('metadata')
 
 
 # If error pauses script
@@ -332,35 +333,40 @@ else:
     try:
         audio = ID3(audio_filename)  # path: path to file
         # Here is the info from de audio file MP3
-        print('INFO MP3: MP3 found.')
+        logger_audio.info('Audio files MP3 found....')
 
         # album/title
         try:
             nfo_album = audio['TALB'].text[0]
-
             # if it as a : in the album name
-            try:
-                nfo_album = nfo_album.split(':')[0]
-            except:
-                pass
+            logger_meta.info('Album title: %s', nfo_album)
 
+            nfo_album = nfo_album.split(':')[0]
+            if nfo_album == nfo_album:
+                logger_meta.info('No (:) char found.')
+            else:
+                logger_meta.info('Removing Everything after (:) %s', nfo_album)
+                logger_meta.info('Album title: %s', nfo_album)
+
+            # Subtitle
             try:
                 nfo_sub = nfo_album.split(':')[1]
-                print('INFO MP3: Album Subtitle:', nfo_sub)
+                logger_meta.info('Album Subtitle: %s', nfo_sub)
             except:
                 nfo_sub = ''
+                logger_meta.info('No Subtitle found')
 
             # remove the initial numbers from album name
             nfo_album = re.sub('^[\d-]*\s*', '', nfo_album)
-            print('INFO MP3: Album:', nfo_album)
+            logger_meta.info('Final album tag: %s', nfo_album)
         except:
-            print('INFO MP3: No Album found')
+            logger_meta.warning('Album title not found.')
             nfo_album = ''
 
         if nfo_sub == '':
             try:
                 nfo_sub = audio['TIT3'].text[0]
-                print('INFO MP3: Album Subtitle:', nfo_sub)
+                logger_meta.info('Album Subtitle: %s', nfo_sub)
             except:
                 pass
         else:
@@ -369,24 +375,23 @@ else:
         try:
             # Artist/author
             nfo_author = audio['TPE1'].text[0]
-            print('INFO MP3: Author:', nfo_author)
             # correct format of author(ex: A. B. Mark)
             nfo_author = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_author)
-
+            logger_meta.info('Author: %s', nfo_author)
         except:
-            print('INFO MP3: This Audiobook as No Author, probably no tags are present.')
-            print('ERROR MP3: No need for this script. Quiting.')
+            logger_meta.warning('This Audiobook as No Author, probably no tags are present.')
+            logger_meta.error('No need for this script. Quiting.')
             time.sleep(4)
             sys.exit()
 
         # Narrator/composer
         try:
             nfo_narr = audio['TCOM'].text[0]
-            print('INFO MP3: Narrator:', nfo_narr)
             # correct format of narrator(ex: A. B. Mark)
             nfo_narr = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_narr)
+            logger_meta.info('Narrator: %s', nfo_narr)
         except:
-            print('INFO MP3: This Audiobook as No Narrator')
+            logger_meta.info('Narrator not found.')
             nfo_narr = ' '
 
         # Genre
