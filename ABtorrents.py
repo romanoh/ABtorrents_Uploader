@@ -45,7 +45,9 @@ logger_path = logging.getLogger('paths')
 logger_torrent = logging.getLogger('torrent')
 logger_nfo = logging.getLogger('nfo')
 logger_audio = logging.getLogger('audiofile')
-logger_meta = logging.getLogger('metadata')
+logger_meta = logging.getLogger('Mp3 meta')
+logger_meta2 = logging.getLogger('Mb4 meta')
+logger_cover = logging.getLogger('cover')
 
 
 # If error pauses script
@@ -372,7 +374,7 @@ else:
                 logger_meta.info('Album Subtitle: %s', nfo_sub)
             except:
                 nfo_sub = ''
-                logger_meta.info('No Subtitle found')
+                logger_meta.info('No Subtitle found.')
 
             # remove the initial numbers from album name
             nfo_album = re.sub('^[\d-]*\s*', '', nfo_album)
@@ -399,7 +401,7 @@ else:
         except:
             logger_meta.warning('This Audiobook as No Author, probably no tags are present.')
             logger_meta.error('No need for this script. Quiting.')
-            time.sleep(4)
+            input("Press Enter to Quit...")
             sys.exit()
 
         # Narrator/composer
@@ -415,41 +417,41 @@ else:
         # Genre
         try:
             nfo_genre = audio['TCON'].text[0]
-            print('INFO MP3: Genre:', nfo_genre)
+            logger_meta.info('Genre: %s', nfo_genre)
         except:
-            print('ERROR MP3: No GENRE found')
+            logger_meta.info('No GENRE found.')
             nfo_genre = ' '
 
         # Year
         try:
             nfo_year = audio['TDRC'].text[0]
-            print('INFO MP3: Year:', nfo_year)
+            logger_meta.info('Year: %s', nfo_year)
         except:
-            print('ERROR: No Year Found found')
+            logger_meta.info('No Year Found.')
             nfo_year = ' '
 
         # Series
         try:
             nfo_series = audio['TXXX:SERIES'].text[0]
-            print('INFO MP3: Series:', nfo_series)
+            logger_meta.info('Series: %s', nfo_series)
         except:
-            print('INFO MP3: This Audiobook as No series')
+            logger_meta.info('No series found.')
             nfo_series = ''
 
         # Series number
         try:
             num_serie = audio['TXXX:series-part'].text[0]
-            print('INFO MP3: Series part:', num_serie)
+            logger_meta.info('Series part: %s', num_serie)
         except:
-            print('ERROR MP3: No series number found')
+            logger_meta.info('No series number found.')
             num_serie = ''
 
         # Asin
         try:
             nfo_asin = audio['TXXX:Asin'].text[0]
-            print('INFO MP3: Asin:', nfo_asin)
+            logger_meta.info('Asin: %s', nfo_asin)
         except:
-            print('ERROR MP3: No Asin found')
+            logger_meta.info('No Asin number found.')
             nfo_asin = ''
 
         # Copyright
@@ -670,8 +672,7 @@ else:
 # ------------------------------------------------------------------------------
 
 # find image file
-
-print("INFO.IMG: Starting looking for Cover file(s)....")
+logger_cover.info('Starting looking for Cover file(s)....')
 image_filename = None
 
 
@@ -686,14 +687,14 @@ def find_files(directory, pattern):
 
 
 for image_filename in find_files(folder_path, '*.jpeg'):
-    print('INFO img: Found Image named JPEG:', image_filename)
+    logger_cover.info('Found Image JPEG: %s', image_filename)
 for image_filename in find_files(folder_path, '*.jpg'):
-    print('INFO img: Found Image named JPG:', image_filename)
+    logger_cover.info('Found Image JPG: %s', image_filename)
 for image_filename in find_files(folder_path, '*.png'):
-    print('INFO img: Found Image named PNG:', image_filename)
+    logger_cover.info('Found Image PNG: %s', image_filename)
 
 if image_filename is None:
-    print('ERROR.IMG: Cover Images are not present...it will be created.')
+    logger_cover.warning('Cover Image is not present...it will be created.')
     afile = File(audio_filename)
 
     if audio_filename.endswith(('.mp3', '.MP3', '.Mp3')):
@@ -716,16 +717,16 @@ if image_filename is None:
         path_to_image = os.path.dirname(file_path)
 
     if artwork == '':
-        print('ERROR.IMG: Cover Images not possible to create, not present or tag corrupt.')
+        logger_cover.error('Cover Images not possible to create, not present or tag corrupt.')
         pass
     else:
         with open(path_to_image + '/' + newadded.replace('/', '-') + '.jpg', 'wb') as img:
             img.write(artwork)
-            print('INFO-img.created: Image Created to folder named:', path_to_image)
+            logger_cover.info('Image Created to folder: %s', path_to_image)
             time.sleep(3)
 
     for image_filename in find_files(folder_path, '*.jpg'):
-        print('INFO-IMG: Image found from created image:', image_filename)
+        logger_cover.info('Image from created image:: %s', image_filename)
         time.sleep(3)
 else:
     pass
