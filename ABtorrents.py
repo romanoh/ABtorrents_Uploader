@@ -736,11 +736,11 @@ else:
 # Login
 print('INFO-Internet: Opening firefox and login. Please wait...')
 if login_session == '0':
-    print('INFO LOGIN: no Firefox session present...')
+    print('INFO LOGIN: no Firefox session present...write your url.')
     # Choose firefox session folder
     sg.theme('Dark Blue 3')  # please make your windows colorful
     layout = [[sg.Text('Here you can enter the firefox session.')],
-              [sg.Text('Get it by writing about:profiles in the address bar.')],
+              [sg.Text('Get it by writing the Url from about:profiles in the address bar.')],
               [sg.Text('Profile', size=(10, 1)), sg.InputText()],
               [sg.Submit(), sg.Cancel()]]
     window = sg.Window(script_version_short, layout,
