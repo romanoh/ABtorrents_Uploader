@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.2.7 - [UNRELEASED]
+[27.02.21] FIX: Some spaces fixes to description.
+[27.02.21] STR: Still improving log system.
 [25.02.21] FIX: Some small fixes to code.
 [25.02.21] NEW: Add Progress Bar to file torrent.
 [24.02.21] STR: Still improving log system.

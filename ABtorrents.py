@@ -166,8 +166,10 @@ if file_path == '':
 
     for i in range(len(animation)):
         time.sleep(0.2)
-        sys.stdout.write("\r" + animation[i % len(animation)] + "\n")
-        sys.stdout.flush()
+        # sys.stdout.write("\r" + animation[i % len(animation)] + "\n")
+        # sys.stdout.flush()
+        stt = animation[i % len(animation)]
+        logger_torrent.info('Creating torrent: %s', stt)
         t.generate()
 
     # define the name of the directory
@@ -289,7 +291,7 @@ else:
 # ------------------------------------------------------------------------------
 # find Nfo
 logger_nfo.info('Starting looking for NFO file(s)....')
-
+nfofile = None
 
 # nfo files Path
 def find_files(directory, pattern):
@@ -982,12 +984,12 @@ time.sleep(2)
 # if nfofile == "No NFO present":
 meta = codecs.open('metadata_' + nfo_album + '.txt', 'w', 'utf-8-sig')
 meta.write(
-    '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n')
+    '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n' + '\n')
 
 if nfo_sub == '':
     pass
 else:
-    meta.write('[color=#CCFF00]' + nfo_sub + '[/color]' + '\n')
+    meta.write('[color=#CCFF00]' + nfo_sub + '[/color]' + '\n' + '\n')
 
 meta.write('Author: ' + nfo_author + '\n')
 meta.write('Narrator: ' + nfo_narr + '\n')
@@ -1009,7 +1011,7 @@ else:
     meta.write('Link: ' + nfo_link + '\n' + '\n')
 
 meta.write(
-    '\n' + '[color=#FF9933]...::**::... [/color][color=#faa702][size=5][b]Book Description[/b][/size][/color][color=#FF9933]...::**::... [/color]' + '\n')
+    '\n' + '[color=#FF9933]...::**::... [/color][color=#faa702][size=5][b]Book Description[/b][/size][/color][color=#FF9933]...::**::... [/color]' + '\n' + '\n')
 meta.write(str(nfo_desc) + '\n' + '\n')
 
 if nfo_series == '':
