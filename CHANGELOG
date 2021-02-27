@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.2.7 - [UNRELEASED]
+[27.02.21] STR: Working on implementing: if nfo present get first metadata from it.
 [27.02.21] CHG: A few updates to readme.
 [27.02.21] FIX: Some spaces fixes to description.
 [27.02.21] STR: Still improving log system.

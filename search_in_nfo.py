@@ -2,11 +2,30 @@ import os
 import re
 import fnmatch
 import time
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-import pyautogui
+import logging
+
+file_path = ''
+
+# set up logging to file
+logging.basicConfig(level=logging.INFO,
+                    format='%(levelname)-8s%(asctime)s %(name)-12s %(message)s',
+                    datefmt='%d-%m-%y (%H:%M)',
+                    filename='log.log',
+                    filemode='w')
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(levelname)-8s%(asctime)s %(name)-8s %(message)s', "%H:%M:%S")
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+
+logger_nfo = logging.getLogger('nfo')
+# --------------------------------------------------------------------
+logger_nfo.info('Starting looking for NFO file....')
+nfofile = None
 
 
 def search_string_in_file(file_name, string_to_search):
@@ -29,7 +48,7 @@ def search_string_in_file(file_name, string_to_search):
 
 # nfo Path
 nfo_filename = None
-folder_path = "T:\\Uvi Poznansky - Twisted.M4B"
+folder_path = "T:\\Graham Masterton - Ghost Virus 02 - The Children God Forgot 2021"
 
 
 def find_files(directory, pattern):
@@ -41,44 +60,56 @@ def find_files(directory, pattern):
                 yield nfo_filename
 
 
-for nfo_filename in find_files(folder_path, '*.nfo'):
-    print('INFO: Found source NFO to process:', nfo_filename)
+if file_path == '':
+    for nfofile in find_files(folder_path, '*.nfo'):
+        logger_nfo.info('Found NFO source: %s', nfofile)
+    for nfofile in find_files(folder_path, '*.txt'):
+        logger_nfo.info('Found TXT source: %s', nfofile)
 
-if not nfo_filename:
-    print('ERROR: Not Found NFO to process, exit program.')
-    quit()
+    if nfofile is None:
+        logger_nfo.warning('NFO file not present...')
+        nfofile = "No NFO present"
+    else:
+        pass
 
-search_author = 'Author:'
+else:
+    logger_nfo.info('Metadata will be made from audio file metadata.')
+    pass
+
 search_album = 'Title:'
+search_author = 'Author:'
 search_narr = 'Read By:'
+search_narr = 'Narrator:'
 search_copyright = 'Copyright:'
 search_genre = 'Genre:'
 search_duration = 'Duration:'
 search_publisher = 'Publisher:'
 search_unabridged = 'Unabridged:'
+search_series = 'Series:'
+search_series_num = 'Series'
 search_release = 'Release:'
 
+
 time.sleep(1)
-print('INFO: Searching Author...')
-# buscar author
-matched_lines = search_string_in_file(nfo_filename, search_author)
-print('Total Matched lines : ', len(matched_lines))
+logger_nfo.info('Searching Author...')
+# search author
+matched_lines = search_string_in_file(nfofile, search_author)
+logger_nfo.info('Total Matched lines: %s', len(matched_lines))
 for elem in matched_lines:
     linha = elem[0]
     author = elem[1]
-# retirar tudo antes do char :
+# remove everything after :
 nfo_author = re.sub(r'^[^:]*:', r'', author).lstrip().title()
 time.sleep(1)
-print('INFO: Author found:', nfo_author)
+logger_nfo.info('Author found: %s', nfo_author)
 time.sleep(1)
-# raise SystemExit(0)
 
 
-print('INFO: Searching Album...')
-time.sleep(2)
-# buscar title
-matched_lines2 = search_string_in_file(nfo_filename, search_album)
-print('Total Matched lines : ', len(matched_lines2))
+logger_nfo.info('Searching Title book...')
+time.sleep(1)
+# search title
+matched_lines2 = search_string_in_file(nfofile, search_album)
+logger_nfo.info('Total Matched lines: %s', len(matched_lines2))
 for elem2 in matched_lines2:
     linha2 = elem2[0]
     title = elem2[1]
@@ -88,49 +119,73 @@ nfo_album = re.sub(r'(Unabridged)', r'', title)
 nfo_album = re.sub(r'- Book 1', r'', nfo_album)
 # retirar tudo antes do char :
 nfo_album = re.sub(r'^[^:]*:', r'', nfo_album).lstrip().title()
-print('INFO: Album found:', nfo_album)
-time.sleep(3)
+logger_nfo.info('Book found: %s', nfo_album)
 
-print('INFO: Searching narrator...')
+
+logger_nfo.info('Searching narrator...')
 time.sleep(1)
 # search_narrator
-matched_lines5 = search_string_in_file(nfo_filename, search_narr)
+matched_lines5 = search_string_in_file(nfofile, search_narr)
 if not matched_lines5:
-    print('INFO: Narrator not Found!')
+    logger_nfo.warning('Narrator not Found!')
     nfo_narr2 = None
 else:
-    print('Total Matched lines : ', len(matched_lines5))
+    logger_nfo.info('Total Matched lines: %s', len(matched_lines5))
     for elem5 in matched_lines5:
         linha5 = elem5[0]
         narr = elem5[1]
     # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
     nfo_narr = re.sub(r'^[^:]*: ', r'', narr).lstrip().title()
     nfo_narr = re.sub(r'\(series-part\) ', r'', nfo_narr)
-    print('INFO: Narrator found:', nfo_narr)
+    logger_nfo.info('Narrator found: %s', nfo_narr)
+    time.sleep(1)
+
+# search_series
+logger_nfo.info('Searching Series...')
+time.sleep(1)
+matched_lines7 = search_string_in_file(nfofile, search_series)
+if not matched_lines7:
+    logger_nfo.warning('Series not Found!')
+    nfo_series = None
+else:
+    logger_nfo.info('Total Matched lines: %s', len(matched_lines7))
+    for elem7 in matched_lines7:
+        linha7 = elem7[0]
+        series7 = elem7[1]
+    # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
+    num_serie = re.search('([0-9]+)', series7)
+    num_serie = num_serie.group()
+    nfo_series = re.sub(r'\d+', r'', series7).lstrip()
+    logger_nfo.info('Series found: %s', nfo_series)
+    try:
+        logger_nfo.info('Series number found: %s', num_serie)
+    except:
+        logger_nfo.info('No Series number found!')
+        pass
     time.sleep(1)
 
 # search_genre Type
-print('INFO: Searching Genre...')
+logger_nfo.info('Searching Genre...')
 time.sleep(1)
-matched_lines8 = search_string_in_file(nfo_filename, search_genre)
+matched_lines8 = search_string_in_file(nfofile, search_genre)
 if not matched_lines8:
-    print('INFO: Genre not Found!')
+    logger_nfo.warning('Genre not Found!')
     nfo_genre = None
 else:
-    print('Total Matched lines : ', len(matched_lines8))
+    logger_nfo.info('Total Matched lines: %s', len(matched_lines8))
     for elem8 in matched_lines8:
         linha8 = elem8[0]
         genre = elem8[1]
     # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
     nfo_genre = re.sub(r'^[^:]*: ', r'', genre).lstrip()
     nfo_genre = re.sub(r'\(tmp_Genre2\) ', r'', nfo_genre)
-    print('INFO: Genre Type found:', nfo_genre)
+    logger_nfo.info('Genre Type found: %s', nfo_genre)
     time.sleep(1)
 
 # search_genre Copyright
 print('INFO: Searching Copyright...')
 time.sleep(1)
-matched_lines10 = search_string_in_file(nfo_filename, search_copyright)
+matched_lines10 = search_string_in_file(nfofile, search_copyright)
 if not matched_lines10:
     print('INFO: Copyright not Found!')
     nfo_copyright = None
@@ -147,7 +202,7 @@ else:
 # search_durtion Duration
 print('INFO: Searching Duration...')
 time.sleep(1)
-matched_lines11 = search_string_in_file(nfo_filename, search_duration)
+matched_lines11 = search_string_in_file(nfofile, search_duration)
 if not matched_lines11:
     print('INFO: Duration not Found!')
     nfo_duration = None
@@ -164,7 +219,7 @@ else:
 # search_Publisher Publisher
 print('INFO: Searching Publisher...')
 time.sleep(1)
-matched_lines12 = search_string_in_file(nfo_filename, search_publisher)
+matched_lines12 = search_string_in_file(nfofile, search_publisher)
 if not matched_lines12:
     print('INFO: Publisher not Found!')
     nfo_publisher = None
@@ -181,7 +236,7 @@ else:
 # search_Publisher Publisher
 print('INFO: Searching Unabridged...')
 time.sleep(1)
-matched_lines13 = search_string_in_file(nfo_filename, search_unabridged)
+matched_lines13 = search_string_in_file(nfofile, search_unabridged)
 if not matched_lines13:
     print('INFO: Unabridged not Found!')
     nfo_unabridged = None
@@ -198,7 +253,7 @@ else:
 # search_Release Release
 print('INFO: Searching Release...')
 time.sleep(1)
-matched_lines14 = search_string_in_file(nfo_filename, search_release)
+matched_lines14 = search_string_in_file(nfofile, search_release)
 if not matched_lines14:
     print('INFO: Release not Found!')
     nfo_release = None
@@ -213,3 +268,21 @@ else:
     time.sleep(1)
 
 
+search_desc = 'Description'
+# search_desc
+copy = False
+with open(nfofile, "r") as saveoutput:
+    for line in saveoutput:
+        if 'Description' in line:
+            copy = True
+        # if line.startswith('-'):
+        #     copy = False
+        if copy:
+            items = (format(line.strip()) for line in saveoutput)
+            join = '\n'.join(items)
+            join = re.sub(r'Description:', r'', join)
+            join = re.sub(r' ==', r'', join)
+            # logger_nfo.info('Description: %s', join)
+            print(join)
+        else:
+            print('No description found.')

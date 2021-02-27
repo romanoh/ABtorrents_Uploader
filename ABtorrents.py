@@ -293,6 +293,7 @@ else:
 logger_nfo.info('Starting looking for NFO file(s)....')
 nfofile = None
 
+
 # nfo files Path
 def find_files(directory, pattern):
     for root, dirs, files in os.walk(directory):
@@ -838,7 +839,7 @@ b_path = path_to_torrent + '/' + nfo_album + '.torrent'
 try:
     os.rename(t_path, b_path)
 except:
-    print('ERROR RENAME: Impossible to rename file aready present.')
+    print('ERROR RENAME: Impossible to rename file already present.')
     window.read(timeout=3000)
 # --------------------------------------------------------------------------
 
