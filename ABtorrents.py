@@ -460,44 +460,44 @@ else:
         # Copyright
         try:
             nfo_copy = audio['TPUB'].text[0]
-            print('INFO MP3: Copyright:', nfo_copy)
+            logger_meta.info('Copyright: %s', nfo_copy)
         except:
+            logger_meta.warning('Copyright not found.')
             nfo_copy = ''
 
         try:
             nfo_link = audio['TXXX:WOAS'].text[0]
-            print('INFO MP3: Link:', nfo_link)
+            logger_meta.info('Link: %s', nfo_link)
         except:
-            print('ERROR MP3: No Link found')
+            logger_meta.warning('Link not found.')
             nfo_link = ''
 
         # Description
         try:
             nfo_desc = audio['COMM::eng'].text[0]
-            print('INFO MP3: Description:', nfo_desc)
+            logger_meta.info('Description: %s', nfo_desc)
         except:
-            print('ERROR MP3: No Description found')
+            logger_meta.warning('Description not found.')
             nfo_desc = ''
 
         # File Type
         nfo_audio = f.mime[0]
-        print('INFO MP3: File type:', nfo_audio)
+        logger_meta.info('File type: %s', nfo_audio)
 
         # bitrate
         nfo_bitrate = int(f.info.bitrate / 1000)
-        print('INFO MP3: Bitrate:', nfo_bitrate, 'kbps')
+        logger_meta.info('Bitrate: %s kbps', nfo_bitrate)
 
         # Encoder
         try:
             nfo_encoder = audio['TSSE'].text[0]
-            print('INFO MP3: Encoder:', nfo_encoder)
+            logger_meta.info('Encoder: %s', nfo_encoder)
         except:
-            print('ERROR: No Encoder found')
+            logger_meta.warning('Encoder not found.')
             nfo_encoder = ''
 
         nfo_full = f.info.pprint()
-        print('INFO MP3: Full audio stream information:', nfo_full)
-
+        logger_meta.info('Full audio stream information:: %s', nfo_full)
 
     except:
         # MP4
