@@ -501,7 +501,7 @@ else:
 
         # Encoder
         try:
-            nfo_encoder = audio['TSSE'].text[0]
+            nfo_encoder = audio['TENC'].text[0]
             logger_meta.info('Encoder: %s', nfo_encoder)
         except:
             logger_meta.warning('Encoder not found.')
@@ -968,7 +968,7 @@ kbps = 'kbps'
 # range 20 to 34kbps
 range34 = range(20, 35)
 range48 = range(44, 49)
-range96 = range(90, 97)
+range96 = range(80, 97)
 range62 = range(62, 63)
 range64 = range(64, 65)
 range192 = range(185, 193)
@@ -1007,7 +1007,7 @@ time.sleep(2)
 # if nfofile == "No NFO present":
 meta = codecs.open('metadata_' + nfo_album + '.txt', 'w', 'utf-8-sig')
 meta.write(
-    '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n' + '\n')
+    '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n')
 
 if nfo_sub == '':
     pass
@@ -1082,7 +1082,7 @@ if re.compile('|'.join(list_horror), re.IGNORECASE).search(
         nfo_genre):  # re.IGNORECASE is used to ignore case
     nfo_genre = 'Horror'
 
-list_crime = ['Genre Fiction', 'Crime', 'Thriller', 'Mystery']
+list_crime = ['Genre Fiction', 'Crime', 'Thriller', 'Mystery', 'Audiobook']
 if re.compile('|'.join(list_crime), re.IGNORECASE).search(
         nfo_genre):  # re.IGNORECASE is used to ignore case
     nfo_genre = 'Crime/Thriller/Mystery'
