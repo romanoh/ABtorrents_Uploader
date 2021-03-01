@@ -21,8 +21,8 @@ import codecs
 import sys
 import logging
 
-script_version = 'Beta v.0.2.7 - ABtorrents uploader Helper'
-script_version_short = 'Beta v.0.2.7'
+script_version = 'Beta v.0.2.8 - ABtorrents uploader Helper'
+script_version_short = 'Beta v.0.2.8'
 
 # set up logging to file
 logging.basicConfig(level=logging.INFO,
@@ -54,7 +54,7 @@ logger_cover = logging.getLogger('cover')
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
     traceback.print_exception(exc_type, exc_value, tb)
-    input("Press key to exit.")
+    input("Press key and enter to exit.")
     sys.exit(-1)
 
 
@@ -341,6 +341,8 @@ if file_path == '':
         logger_audio.info('Found MP3 audio source: %s', audio_filename)
     for audio_filename in find_files(folder_path, '*.m4b'):
         logger_audio.info('Found M4B audio source: %s', audio_filename)
+    for audio_filename in find_files(folder_path, '*.mp4'):
+        logger_audio.info('Found MP4 audio source: %s', audio_filename)
 
 else:
     audio_filename = file_path
@@ -457,16 +459,17 @@ else:
             logger_meta.info('No Asin number found.')
             nfo_asin = ''
 
-        # Copyright
+        # Publisher
         try:
             nfo_copy = audio['TPUB'].text[0]
-            logger_meta.info('Copyright: %s', nfo_copy)
+            logger_meta.info('Publisher: %s', nfo_copy)
         except:
-            logger_meta.warning('Copyright not found.')
+            logger_meta.warning('Publisher not found.')
             nfo_copy = ''
 
+        #Link
         try:
-            nfo_link = audio['TXXX:WOAS'].text[0]
+            nfo_link = audio['WOAF'].text[0]
             logger_meta.info('Link: %s', nfo_link)
         except:
             logger_meta.warning('Link not found.')
@@ -508,20 +511,22 @@ else:
         # Here is the info from de audio file MP4(mb4)
         try:
             nfo_album = mp4_audio['\xa9alb']
-            print('INFO MB4: Album:', nfo_album[0])
+            logger_meta2.info('Album: %s', nfo_album[0])
             nfo_album = nfo_album[0]
 
             # if it as a : in the album name
             try:
                 nfo_album = nfo_album.split(':')[0]
+                logger_meta2.info('(:) char found.')
             except:
                 pass
 
             try:
                 nfo_sub = nfo_album.split(':')[1]
-                print('INFO MB4: Album Subtitle:', nfo_sub)
+                logger_meta2.info('Album Subtitle: %s', nfo_sub)
             except:
                 nfo_sub = ''
+                logger_meta2.info('Album Subtitle not found.')
 
             # see if it has number at start
             num_serie2 = re.search('([0-9]+)', nfo_album)
@@ -533,13 +538,13 @@ else:
 
 
         except:
-            print('INFO MB4: No album found.')
+            logger_meta2.warning('Book name not found.')
             nfo_album = ''
 
         if nfo_sub == '':
             try:
                 nfo_sub = audio['TIT3'].text[0]
-                print('INFO MB4: Album Subtitle:', nfo_sub)
+                logger_meta2.info('Book Subtitle: %s', nfo_sub)
             except:
                 pass
         else:
@@ -590,13 +595,13 @@ else:
             print('INFO MB4: No Asin.')
             nfo_asin = ''
 
-        # Copyright
+        # Publisher
         try:
             nfo_copy = mp4_audio['\xa9pub']
-            print('INFO MB4: Copyright:', nfo_copy[0])
+            print('INFO MB4: Publisher:', nfo_copy[0])
             nfo_copy = nfo_copy[0]
         except:
-            print('INFO MB4: No Copyright.')
+            print('INFO MB4: No Publisher.')
             nfo_copy = ''
 
         # Series
