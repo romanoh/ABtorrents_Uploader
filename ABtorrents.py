@@ -461,10 +461,18 @@ else:
 
         # Publisher
         try:
-            nfo_copy = audio['TPUB'].text[0]
-            logger_meta.info('Publisher: %s', nfo_copy)
+            nfo_publi = audio['TPUB'].text[0]
+            logger_meta.info('Publisher: %s', nfo_publi)
         except:
             logger_meta.warning('Publisher not found.')
+            nfo_publi = ''
+
+        # copyright
+        try:
+            nfo_copy = audio['TCOP'].text[0]
+            logger_meta.info('Copyright: %s', nfo_copy)
+        except:
+            logger_meta.warning('copyright not found.')
             nfo_copy = ''
 
         #Link
@@ -597,11 +605,20 @@ else:
 
         # Publisher
         try:
-            nfo_copy = mp4_audio['\xa9pub']
-            print('INFO MB4: Publisher:', nfo_copy[0])
-            nfo_copy = nfo_copy[0]
+            nfo_publi = mp4_audio['\xa9pub']
+            print('INFO MB4: Publisher:', nfo_publi[0])
+            nfo_publi = nfo_publi[0]
         except:
             print('INFO MB4: No Publisher.')
+            nfo_publi = ''
+
+        # Copyright
+        try:
+            nfo_copy = mp4_audio['\xa9pub']
+            print('INFO MB4: Copyright:', nfo_copy[0])
+            nfo_copy = nfo_copy[0]
+        except:
+            print('INFO MB4: No Copyright.')
             nfo_copy = ''
 
         # Series
@@ -1005,6 +1022,11 @@ if nfo_asin == '':
     pass
 else:
     meta.write('Asin: ' + nfo_asin + '\n')
+
+if nfo_publi == '':
+    pass
+else:
+    meta.write('Publisher: ' + nfo_publi + '\n')
 
 if nfo_copy == '':
     pass

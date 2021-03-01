@@ -2,8 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.2.8 - [UNRELEASED]
-[01.03.21] STR: Still improving log system.
 [01.03.21] NEW: Added MP4 in audio search.
+[01.03.21] NEW: Added Copyright tag.
+[01.03.21] STR: Still improving log system.
 [01.03.21] FIX: Fix a bug in publisher tag.
 [01.03.21] FIX: Fix a bug in mp3 link tag.
 
