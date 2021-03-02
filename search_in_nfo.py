@@ -48,7 +48,7 @@ def search_string_in_file(file_name, string_to_search):
 
 # nfo Path
 nfo_filename = None
-folder_path = "T:\\Graham Masterton - Ghost Virus 02 - The Children God Forgot 2021"
+folder_path = "T:\\Robert Gott - The Port Fairy Murders"
 
 
 def find_files(directory, pattern):
@@ -75,20 +75,29 @@ if file_path == '':
 else:
     logger_nfo.info('Metadata will be made from audio file metadata.')
     pass
-
+# -------------------------------------------------------------------------------
 search_album = 'Title:'
 search_author = 'Author:'
-search_narr = 'Read By:'
-search_narr = 'Narrator:'
+try:
+    search_narr = 'Read By:'
+except NameError:
+    search_narr = 'Narrator:'
 search_copyright = 'Copyright:'
 search_genre = 'Genre:'
 search_duration = 'Duration:'
 search_publisher = 'Publisher:'
 search_unabridged = 'Unabridged:'
-search_series = 'Series:'
-search_series_num = 'Series'
-search_release = 'Release:'
+try:
+    search_series = 'Series'
 
+except NameError:
+    search_series = 'Series Name:'
+try:
+    search_series_num = 'Series'
+except NameError:
+    search_series_num = 'Position in Series:'
+search_release = 'Release:'
+search_size = 'Size:'
 
 time.sleep(1)
 logger_nfo.info('Searching Author...')
@@ -103,7 +112,6 @@ nfo_author = re.sub(r'^[^:]*:', r'', author).lstrip().title()
 time.sleep(1)
 logger_nfo.info('Author found: %s', nfo_author)
 time.sleep(1)
-
 
 logger_nfo.info('Searching Title book...')
 time.sleep(1)
@@ -120,7 +128,6 @@ nfo_album = re.sub(r'- Book 1', r'', nfo_album)
 # retirar tudo antes do char :
 nfo_album = re.sub(r'^[^:]*:', r'', nfo_album).lstrip().title()
 logger_nfo.info('Book found: %s', nfo_album)
-
 
 logger_nfo.info('Searching narrator...')
 time.sleep(1)
@@ -152,6 +159,7 @@ else:
     for elem7 in matched_lines7:
         linha7 = elem7[0]
         series7 = elem7[1]
+        print (elem7[1])
     # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
     num_serie = re.search('([0-9]+)', series7)
     num_serie = num_serie.group()
@@ -233,7 +241,7 @@ else:
     print('INFO: Publisher found:', nfo_publisher)
     time.sleep(1)
 
-# search_Publisher Publisher
+# search_unabridged
 print('INFO: Searching Unabridged...')
 time.sleep(1)
 matched_lines13 = search_string_in_file(nfofile, search_unabridged)
@@ -267,6 +275,22 @@ else:
     print('INFO: Release found:', nfo_release)
     time.sleep(1)
 
+# search_Release Release
+print('INFO: Searching Size...')
+time.sleep(1)
+matched_lines20 = search_string_in_file(nfofile, search_size)
+if not matched_lines20:
+    print('INFO: Size not Found!')
+    nfo_size = None
+else:
+    print('Total Matched lines : ', len(matched_lines20))
+    for elem20 in matched_lines20:
+        linha20 = elem20[0]
+        size = elem20[1]
+    # retirar tudo antes do char :.
+    nfo_size = re.sub(r'^[^:]*: ', r'', size).lstrip()
+    print('INFO: Size found:', nfo_size)
+    time.sleep(1)
 
 search_desc = 'Description'
 # search_desc
