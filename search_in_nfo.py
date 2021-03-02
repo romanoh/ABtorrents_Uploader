@@ -306,7 +306,8 @@ with open(nfofile, "r") as saveoutput:
             join = '\n'.join(items)
             join = re.sub(r'Description:', r'', join)
             join = re.sub(r' ==', r'', join)
+            nfo_desc = join
             # logger_nfo.info('Description: %s', join)
             print(join)
-        else:
-            print('No description found.')
+        # else:
+            # print('No description found.')

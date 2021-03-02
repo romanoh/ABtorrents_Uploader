@@ -887,11 +887,11 @@ if not image_filename:
 else:
     image_filename = image_filename.replace('/', '\\')  # substituir o \ por /
     driver.find_element_by_id("droppable").click()  # This opens the windows file selector
-    time.sleep(4)
+    time.sleep(6)
     pyautogui.write(image_filename)
-    time.sleep(5)
+    time.sleep(7)
     pyautogui.press('enter')
-    time.sleep(8)
+    time.sleep(4)
 # --------------------------------------------------------------------------
 
 # introduzir o nome da serie do audiobook na pagina dos uploads
@@ -1018,6 +1018,10 @@ meta.write('Author: ' + nfo_author + '\n')
 meta.write('Narrator: ' + nfo_narr + '\n')
 meta.write('Genre: ' + nfo_genre + '\n')
 meta.write('Year: ' + str(nfo_year) + '\n')
+if nfo_duration == '':
+    pass
+else:
+    meta.write('Duration: ' + nfo_duration + '\n')
 if nfo_asin == '':
     pass
 else:
