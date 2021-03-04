@@ -87,15 +87,15 @@ search_genre = 'Genre:'
 search_duration = 'Duration:'
 search_publisher = 'Publisher:'
 search_unabridged = 'Unabridged:'
-try:
-    search_series = 'Series'
 
-except NameError:
-    search_series = 'Series Name:'
-try:
-    search_series_num = 'Series'
-except NameError:
-    search_series_num = 'Position in Series:'
+# Series
+search_series = 'Series:       '
+search_series = 'Series Name:'
+
+# Series number
+# search_series_num = 'Series'
+search_series_num = 'Position in Series:'
+
 search_release = 'Release:'
 search_size = 'Size:'
 
@@ -159,18 +159,30 @@ else:
     for elem7 in matched_lines7:
         linha7 = elem7[0]
         series7 = elem7[1]
-        print (elem7[1])
     # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
-    num_serie = re.search('([0-9]+)', series7)
-    num_serie = num_serie.group()
-    nfo_series = re.sub(r'\d+', r'', series7).lstrip()
-    logger_nfo.info('Series found: %s', nfo_series)
-    try:
-        logger_nfo.info('Series number found: %s', num_serie)
-    except:
-        logger_nfo.info('No Series number found!')
-        pass
+    num_serie = re.sub(r'^[^:]*: ', r'', series7).lstrip().title()
+    # num_serie = re.sub(r'\d+', r'', num_serie).lstrip()
+    logger_nfo.info('Series found: %s', num_serie)
     time.sleep(1)
+
+    # search series number
+    logger_nfo.info('Searching Series number...')
+    time.sleep(1)
+    matched_lines50 = search_string_in_file(nfofile, search_series_num)
+    if not matched_lines50:
+        logger_nfo.warning('Series number not Found!')
+        search_series_num = None
+    else:
+        logger_nfo.info('Total Matched lines: %s', len(matched_lines50))
+        for elem50 in matched_lines50:
+            linha50 = elem50[0]
+            numb = elem50[1]
+        # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
+        num_serie = re.sub(r'^[^:]*: ', r'', numb).lstrip()
+        # nfo_genre = re.sub(r'\(tmp_Genre2\) ', r'', nfo_genre)
+        logger_nfo.info('Series number found: %s', num_serie)
+        time.sleep(1)
+
 
 # search_genre Type
 logger_nfo.info('Searching Genre...')

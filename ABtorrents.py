@@ -1018,10 +1018,12 @@ meta.write('Author: ' + nfo_author + '\n')
 meta.write('Narrator: ' + nfo_narr + '\n')
 meta.write('Genre: ' + nfo_genre + '\n')
 meta.write('Year: ' + str(nfo_year) + '\n')
-if nfo_duration == '':
-    pass
-else:
-    meta.write('Duration: ' + nfo_duration + '\n')
+
+# if nfo_duration == '':
+#     pass
+# else:
+#     meta.write('Duration: ' + nfo_duration + '\n')
+
 if nfo_asin == '':
     pass
 else:
@@ -1061,7 +1063,7 @@ else:
 
 meta.write('File Type: ' + nfo_audio + '\n')
 meta.write('Bitrate: ' + nfo_bitrate + '\n')
-meta.write('Full technical: ' + nfo_full + '\n')
+meta.write('Technical: ' + nfo_full + '\n')
 meta.write('[size=1]' + script_version + '[/size]')
 meta.close()
 
