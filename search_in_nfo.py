@@ -48,7 +48,7 @@ def search_string_in_file(file_name, string_to_search):
 
 # nfo Path
 nfo_filename = None
-folder_path = "T:\\03 The Black-Eyed Kids"
+folder_path = "Y:\\Genre Fiction\\Emerald O'Brien\\ 2020. What She Found (64kb)"
 
 
 def find_files(directory, pattern):
@@ -77,11 +77,24 @@ else:
     pass
 # -------------------------------------------------------------------------------
 search_album = 'Title:'
-search_author = 'Author:'
+
+
+except:
+    search_album = 'TiTlE......:'
+
+
+try:
+    search_author = 'AUTHOR.....:'
+except:
+    search_author = 'Author:'
+
 try:
     search_narr = 'Read By:'
 except NameError:
+    search_narr = 'READ BY....:'
+except:
     search_narr = 'Narrator:'
+
 search_copyright = 'Copyright:'
 search_genre = 'Genre:'
 search_duration = 'Duration:'

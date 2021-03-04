@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.2.8 - [UNRELEASED]
+[04.03.21] NEW: Added to description comment from MB4.
 [04.03.21] STR: Working on implementing: if nfo present get first metadata from it.
 [02.03.21] STR: Working on implementing: if nfo present get first metadata from it.
 [01.03.21] NEW: Added crime to Genre if genre tag is Audiobook.

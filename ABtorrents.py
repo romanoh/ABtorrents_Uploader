@@ -670,6 +670,15 @@ else:
             print('INFO MB4: No Link.')
             nfo_link = ''
 
+        try:
+            nfo_comm = mp4_audio['\xa9cmt']
+            print('INFO MB4: Comment:', nfo_comm[0].decode('utf8'))
+            nfo_comm = nfo_comm[0].decode('utf8')
+        except:
+            print('INFO MB4: No Comment.')
+            nfo_comm = ''
+
+
         # File Type
         nfo_audio = f.mime[0]
         print('INFO MB4: File Type:', nfo_audio)
@@ -887,11 +896,11 @@ if not image_filename:
 else:
     image_filename = image_filename.replace('/', '\\')  # substituir o \ por /
     driver.find_element_by_id("droppable").click()  # This opens the windows file selector
-    time.sleep(6)
-    pyautogui.write(image_filename)
-    time.sleep(7)
-    pyautogui.press('enter')
     time.sleep(4)
+    pyautogui.write(image_filename)
+    time.sleep(4)
+    pyautogui.press('enter')
+    time.sleep(6)
 # --------------------------------------------------------------------------
 
 # introduzir o nome da serie do audiobook na pagina dos uploads
@@ -972,7 +981,7 @@ range96 = range(80, 97)
 range62 = range(62, 63)
 range64 = range(64, 65)
 range192 = range(185, 193)
-range128 = range(120, 129)
+range128 = range(119, 129)
 
 if nfo_bitrate == range128:
     nfo_bitrate = '128'
@@ -1047,6 +1056,12 @@ else:
 meta.write(
     '\n' + '[color=#FF9933]...::**::... [/color][color=#faa702][size=5][b]Book Description[/b][/size][/color][color=#FF9933]...::**::... [/color]' + '\n' + '\n')
 meta.write(str(nfo_desc) + '\n' + '\n')
+
+if nfo_comm == '':
+    pass
+else:
+    meta.write('Comment: ' + nfo_comm + '\n')
+
 
 if nfo_series == '':
     pass
