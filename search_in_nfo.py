@@ -48,7 +48,7 @@ def search_string_in_file(file_name, string_to_search):
 
 # nfo Path
 nfo_filename = None
-folder_path = "T:\\Robert Gott - The Port Fairy Murders"
+folder_path = "T:\\03 The Black-Eyed Kids"
 
 
 def find_files(directory, pattern):
@@ -127,7 +127,11 @@ nfo_album = re.sub(r'(Unabridged)', r'', title)
 nfo_album = re.sub(r'- Book 1', r'', nfo_album)
 # retirar tudo antes do char :
 nfo_album = re.sub(r'^[^:]*:', r'', nfo_album).lstrip().title()
+# if book as series
+nfo_album2 = nfo_album.split(' - ')
+nfo_album = nfo_album2[1]
 logger_nfo.info('Book found: %s', nfo_album)
+
 
 logger_nfo.info('Searching narrator...')
 time.sleep(1)
@@ -135,7 +139,7 @@ time.sleep(1)
 matched_lines5 = search_string_in_file(nfofile, search_narr)
 if not matched_lines5:
     logger_nfo.warning('Narrator not Found!')
-    nfo_narr2 = None
+    nfo_narr = None
 else:
     logger_nfo.info('Total Matched lines: %s', len(matched_lines5))
     for elem5 in matched_lines5:
@@ -152,36 +156,49 @@ logger_nfo.info('Searching Series...')
 time.sleep(1)
 matched_lines7 = search_string_in_file(nfofile, search_series)
 if not matched_lines7:
-    logger_nfo.warning('Series not Found!')
-    nfo_series = None
+    try:
+        nfo_series = nfo_album2[0]
+        nfo_series = re.sub(r' Book 1', r'', nfo_series)
+        nfo_series = re.sub(r' Book 2', r'', nfo_series)
+        nfo_series = re.sub(r' Book 3', r'', nfo_series)
+        nfo_series = re.sub(r' Book 4', r'', nfo_series)
+        nfo_series = re.sub(r' Book 5', r'', nfo_series)
+        logger_nfo.info('Series found: %s', nfo_series)
+    except:
+        logger_nfo.warning('Series not Found!')
 else:
     logger_nfo.info('Total Matched lines: %s', len(matched_lines7))
     for elem7 in matched_lines7:
         linha7 = elem7[0]
         series7 = elem7[1]
     # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
-    num_serie = re.sub(r'^[^:]*: ', r'', series7).lstrip().title()
+    nfo_series = re.sub(r'^[^:]*: ', r'', series7).lstrip().title()
     # num_serie = re.sub(r'\d+', r'', num_serie).lstrip()
-    logger_nfo.info('Series found: %s', num_serie)
+    logger_nfo.info('Series found: %s', nfo_series)
     time.sleep(1)
 
-    # search series number
-    logger_nfo.info('Searching Series number...')
-    time.sleep(1)
-    matched_lines50 = search_string_in_file(nfofile, search_series_num)
-    if not matched_lines50:
-        logger_nfo.warning('Series number not Found!')
-        search_series_num = None
-    else:
-        logger_nfo.info('Total Matched lines: %s', len(matched_lines50))
-        for elem50 in matched_lines50:
-            linha50 = elem50[0]
-            numb = elem50[1]
-        # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
-        num_serie = re.sub(r'^[^:]*: ', r'', numb).lstrip()
-        # nfo_genre = re.sub(r'\(tmp_Genre2\) ', r'', nfo_genre)
+# search series number
+logger_nfo.info('Searching Series number...')
+time.sleep(1)
+matched_lines50 = search_string_in_file(nfofile, search_series_num)
+if not matched_lines50:
+    try:
+        num_serie = nfo_album2[0]
+        num_serie2 = num_serie.split(' Book ')
+        num_serie = num_serie2[1]
         logger_nfo.info('Series number found: %s', num_serie)
-        time.sleep(1)
+    except:
+        logger_nfo.warning('Series number not Found!')
+else:
+    logger_nfo.info('Total Matched lines: %s', len(matched_lines50))
+    for elem50 in matched_lines50:
+        linha50 = elem50[0]
+        numb = elem50[1]
+    # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
+    num_serie = re.sub(r'^[^:]*: ', r'', numb).lstrip()
+    # nfo_genre = re.sub(r'\(tmp_Genre2\) ', r'', nfo_genre)
+    logger_nfo.info('Series number found: %s', num_serie)
+    time.sleep(1)
 
 
 # search_genre Type
@@ -203,20 +220,20 @@ else:
     time.sleep(1)
 
 # search_genre Copyright
-print('INFO: Searching Copyright...')
+logger_nfo.info('Searching Copyright...')
 time.sleep(1)
 matched_lines10 = search_string_in_file(nfofile, search_copyright)
 if not matched_lines10:
-    print('INFO: Copyright not Found!')
+    logger_nfo.warning('Copyright not Found!')
     nfo_copyright = None
 else:
-    print('Total Matched lines : ', len(matched_lines10))
+    logger_nfo.info('Total Matched lines: %s', len(matched_lines10))
     for elem10 in matched_lines10:
         linha10 = elem10[0]
         copy = elem10[1]
     # retirar tudo antes do char : / o .title() serve para meter a 1a letra grande.
     nfo_copy = re.sub(r'^[^:]*: ', r'', copy).lstrip()
-    print('INFO: Copyright found:', nfo_copy)
+    logger_nfo.info('Copyright found: %s', nfo_copy)
     time.sleep(1)
 
 # search_durtion Duration
