@@ -76,7 +76,8 @@ else:
     logger_nfo.info('Metadata will be made from audio file metadata.')
     pass
 # -------------------------------------------------------------------------------
-search_album = 'Title:'
+try:
+    search_album = 'Title:'
 
 
 except:

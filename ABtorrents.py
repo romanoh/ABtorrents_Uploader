@@ -24,7 +24,7 @@ import logging
 script_version = 'Beta v.0.2.8 - ABtorrents uploader Helper'
 script_version_short = 'Beta v.0.2.8'
 
-# set up logging to file
+# set up logging to file -------------------------------------------------------------------
 logging.basicConfig(level=logging.INFO,
                     format='%(levelname)-8s%(asctime)s %(name)-12s %(message)s',
                     datefmt='%d-%m-%y (%H:%M)',
@@ -48,9 +48,29 @@ logger_audio = logging.getLogger('audiofile')
 logger_meta = logging.getLogger('Mp3 meta')
 logger_meta2 = logging.getLogger('Mb4 meta')
 logger_cover = logging.getLogger('cover')
+# END set up logging to file ----------------------------------------------------------------
+
+nfo_author = ''
+nfo_narr = ''
+nfo_album = ''
+nfo_series = ''
+num_serie = ''
+nfo_audio = ''
+nfo_bitrate = ''
+nfo_sub = ''
+nfo_genre = ''
+nfo_year = ''
+nfo_asin = ''
+nfo_publi = ''
+nfo_copy = ''
+nfo_link = ''
+nfo_desc = ''
+nfo_encoder = ''
+nfo_full = ''
+nfo_comm = ''
 
 
-# If error pauses script
+# If error pauses script---------------------------------------------------
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
     traceback.print_exception(exc_type, exc_value, tb)
@@ -59,15 +79,14 @@ def show_exception_and_exit(exc_type, exc_value, tb):
 
 
 sys.excepthook = show_exception_and_exit
-# END If error pauses script
+# If error pauses script---------------------------------------------------
 
-# ------------------------------------------------------------
-# Log Version
+
+# Log Version--------------------------------------------------------------
 logging.info('Script Version: %s', script_version)
+# END Log Version----------------------------------------------------------
 
-# ------------------------------------------------------------
-
-# Config
+# Config-------------------------------------------------------------------
 # update the config file
 config = configparser.ConfigParser()
 
@@ -99,8 +118,9 @@ else:
     torrent_file_path = config['FOLDERS']['torrent_folder']
     torrent_file = config['FOLDERS']['torrent_file']
     login_session = config['LOGIN']['firefox_profile']
-# ----------------------------------------------------------------------------
-# Paths
+# END Config-----------------------------------------------------------------
+
+# Paths to file/folder-------------------------------------------------------
 folder_path = None
 file_path = None
 
@@ -284,12 +304,13 @@ else:
     t.write(path_to_torrent_file + '/' + file_path2 + '.torrent')
     logger_torrent.info('The file was created.')
     newadded = file_path2
+# END Paths to file/folder-----------------------------------------------------
 
 # para terminar o script
 # raise SystemExit(0)
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
-# find Nfo
+
+
+# Find NFO Nfo------------------------------------------------------------------
 logger_nfo.info('Starting looking for NFO file(s)....')
 nfofile = None
 
@@ -317,10 +338,10 @@ if file_path == '':
 else:
     logger_nfo.info('Metadata will be made from audio file metadata.')
     pass
+# END Find NFO------------------------------------------------------------------
 
-# -----------------------------------------------------------------------
-# -----------------------------------------------------------------------
-# Find audio files
+
+# Find audio files--------------------------------------------------------------
 logger_audio.info('Starting looking for audio file(s)....')
 
 audio_filename = None
@@ -359,6 +380,9 @@ else:
         audio = ID3(audio_filename)  # path: path to file
         # Here is the info from de audio file MP3
         logger_audio.info('Audio files MP3 found....')
+
+        # make this to mp3
+        nfo_comm = ''
 
         # album/title
         try:
@@ -417,7 +441,6 @@ else:
             logger_meta.info('Narrator: %s', nfo_narr)
         except:
             logger_meta.info('Narrator not found.')
-            nfo_narr = ' '
 
         # Genre
         try:
@@ -425,7 +448,6 @@ else:
             logger_meta.info('Genre: %s', nfo_genre)
         except:
             logger_meta.info('No GENRE found.')
-            nfo_genre = ' '
 
         # Year
         try:
@@ -433,7 +455,6 @@ else:
             logger_meta.info('Year: %s', nfo_year)
         except:
             logger_meta.info('No Year Found.')
-            nfo_year = ' '
 
         # Series
         try:
@@ -441,7 +462,6 @@ else:
             logger_meta.info('Series: %s', nfo_series)
         except:
             logger_meta.info('No series found.')
-            nfo_series = ''
 
         # Series number
         try:
@@ -449,7 +469,6 @@ else:
             logger_meta.info('Series part: %s', num_serie)
         except:
             logger_meta.info('No series number found.')
-            num_serie = ''
 
         # Asin
         try:
@@ -457,7 +476,6 @@ else:
             logger_meta.info('Asin: %s', nfo_asin)
         except:
             logger_meta.info('No Asin number found.')
-            nfo_asin = ''
 
         # Publisher
         try:
@@ -465,7 +483,6 @@ else:
             logger_meta.info('Publisher: %s', nfo_publi)
         except:
             logger_meta.warning('Publisher not found.')
-            nfo_publi = ''
 
         # copyright
         try:
@@ -473,15 +490,13 @@ else:
             logger_meta.info('Copyright: %s', nfo_copy)
         except:
             logger_meta.warning('copyright not found.')
-            nfo_copy = ''
 
-        #Link
+        # Link
         try:
             nfo_link = audio['WOAF'].text[0]
             logger_meta.info('Link: %s', nfo_link)
         except:
             logger_meta.warning('Link not found.')
-            nfo_link = ''
 
         # Description
         try:
@@ -489,7 +504,6 @@ else:
             logger_meta.info('Description: %s', nfo_desc)
         except:
             logger_meta.warning('Description not found.')
-            nfo_desc = ''
 
         # File Type
         nfo_audio = f.mime[0]
@@ -505,7 +519,6 @@ else:
             logger_meta.info('Encoder: %s', nfo_encoder)
         except:
             logger_meta.warning('Encoder not found.')
-            nfo_encoder = ''
 
         nfo_full = f.info.pprint()
         logger_meta.info('Full audio stream information:: %s', nfo_full)
@@ -514,7 +527,6 @@ else:
         # MP4
         mp4_audio = MP4(audio_filename)  # path: path to file
         # no tag in MB4
-        nfo_encoder = ''
 
         # Here is the info from de audio file MP4(mb4)
         try:
@@ -547,7 +559,6 @@ else:
 
         except:
             logger_meta2.warning('Book name not found.')
-            nfo_album = ''
 
         if nfo_sub == '':
             try:
@@ -574,7 +585,6 @@ else:
             nfo_narr = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_narr)
         except:
             print('INFO MB4: No Narrator found.')
-            nfo_narr = ''
 
         # Genre
         try:
@@ -583,7 +593,6 @@ else:
             nfo_genre = nfo_genre[0]
         except:
             print('INFO MB4: No Genre found.')
-            nfo_genre = ''
 
         # Year
         try:
@@ -592,7 +601,6 @@ else:
             nfo_year = nfo_year[0]
         except:
             print('INFO MB4: No Year found.')
-            nfo_year = ''
 
         # Asin
         try:
@@ -601,7 +609,6 @@ else:
             nfo_asin = nfo_asin[0].decode('utf8')
         except:
             print('INFO MB4: No Asin.')
-            nfo_asin = ''
 
         # Publisher
         try:
@@ -610,7 +617,6 @@ else:
             nfo_publi = nfo_publi[0]
         except:
             print('INFO MB4: No Publisher.')
-            nfo_publi = ''
 
         # Copyright
         try:
@@ -619,7 +625,6 @@ else:
             nfo_copy = nfo_copy[0]
         except:
             print('INFO MB4: No Copyright.')
-            nfo_copy = ''
 
         # Series
         try:
@@ -628,7 +633,6 @@ else:
             nfo_series = nfo_series[0].decode('utf8')
         except:
             print('INFO MB4: No Series(1) found...')
-            nfo_series = ''
 
         if not nfo_series:
             try:
@@ -637,9 +641,8 @@ else:
                 print('INFO MB4: Series(2) found:', nfo_series[0])
             except:
                 print('INFO MB4: No Series(2) found...')
-                nfo_series = ''
 
-        # se a serie for igual ao autor move along
+        # If series iqual author move along
         if nfo_series == nfo_author:
             nfo_series = ''
             print('INFO MB4: Series(2) found but is the same as author...removed')
@@ -651,14 +654,12 @@ else:
             print('INFO MB4: Series number:', num_serie[0].decode('utf8'))
             num_serie = num_serie[0].decode('utf8')
         except:
-            num_serie = ''
             print('INFO MB4: Series number(1) not found.')
 
         if not num_serie:
             num_serie = num_serie3
             print('INFO MB4: Series number(2) found:', num_serie)
         else:
-            num_serie = ''
             print('INFO MB4: Series number(2) not found.')
 
         # Link
@@ -668,7 +669,6 @@ else:
             nfo_link = nfo_link[0].decode('utf8')
         except:
             print('INFO MB4: No Link.')
-            nfo_link = ''
 
         try:
             nfo_comm = mp4_audio['\xa9cmt']
@@ -676,8 +676,6 @@ else:
             nfo_comm = nfo_comm[0].decode('utf8')
         except:
             print('INFO MB4: No Comment.')
-            nfo_comm = ''
-
 
         # File Type
         nfo_audio = f.mime[0]
@@ -694,18 +692,15 @@ else:
             nfo_desc = nfo_desc[0]
         except:
             print('INFO MB4: No Description.')
-            nfo_desc = ''
 
         nfo_full = f.info.pprint()
         print('INFO MB4: Full audio stream information:', nfo_full)
         time.sleep(3)
 
-# para terminar o script
+# End script
 # raise SystemExit(0)
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
 
-# find image file
+# Find image file ---------------------------------------------------------
 logger_cover.info('Starting looking for Cover file(s)....')
 image_filename = None
 
@@ -764,10 +759,9 @@ if image_filename is None:
         time.sleep(3)
 else:
     pass
+# END Find image file ---------------------------------------------------------
 
-# ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
-# Login
+# Login -----------------------------------------------------------------------
 print('INFO-Internet: Opening firefox and login. Please wait...')
 if login_session == '0':
     print('INFO LOGIN: no Firefox session present...write your url.')
@@ -822,46 +816,52 @@ driver.get("https://www.abtorrents.me/upload_audiobook.php")
 # # exemplo para opcoes a escolher
 # # driver.find_element_by_xpath("//select[@name='element_name']/option[text()='option_text']").click()
 
-# --------------------------------------------------------------------------
+# END Login -----------------------------------------------------------------------
 
-# mudar para autor
+
+# Author internet--------------------------------------------------------------------------
+# Change to author
 button_author = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div[1]/ul/li[1]/a")
 button_author.click()
 print('INFO: Writing the Author...')
 time.sleep(4)
 
-# para meter autor
+# Writing author
 author_name = driver.find_element_by_name('add_author')
 author_name.send_keys(nfo_author)
 time.sleep(4)
 
-# carregar no X para carregar
+# Pressing X to load
 author_button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/form/h3[4]/input[2]")
 author_button.click()
 time.sleep(4)
-# --------------------------------------------------------------------------
-# para meter narrator
 
-# passar para narrator
+# Narrator internet--------------------------------------------------------------------------
+# Change to narrator Link
 narrator_button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[4]/a")
 narrator_button.click()
 print('INFO: Writing the Narrator...')
 time.sleep(4)
 
+# Writing Narrator
 narrator_name = driver.find_element_by_name('add_narrator')
 narrator_name.send_keys(nfo_narr)
 time.sleep(3)
 
-# carregar no X para carregar
+# Pressing X to load
 nextButton3 = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/form/h3[4]/input[2]")
 nextButton3.click()
 time.sleep(4)
-# --------------------------------------------------------------------------
+# END Narrator internet--------------------------------------------------------------------------
+
+# Change to Upload Page--------------------------------------------------------
 upload_Button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[1]/a")
 upload_Button.click()
 print('INFO: Changing to the upload page...')
+# END Change to Upload Page----------------------------------------------------
 
-# --------------------------------------------------------------------------
+# Torrent file --------------------------------------------------------------
+# Change Torrent Name
 time.sleep(3)
 print('INFO-Torrent: Changing the name of torrent.')
 
@@ -872,23 +872,19 @@ try:
 except:
     print('ERROR RENAME: Impossible to rename file already present.')
     window.read(timeout=3000)
-# --------------------------------------------------------------------------
+# END Change Torrent Name
 
-# selecionar o torrent file
+
+# Select torrent file
 file_upload = WebDriverWait(driver, 3).until(
     EC.presence_of_element_located((By.ID, "torrent"))
 )
 file_upload.send_keys(os.path.abspath(b_path))
 
-# --------------------------------------------------------------------------
+# END Torrent file ------------------------------------------------------------
 
-# introduzir o titulo do audiobook na pagina dos uploads
-# AB_title = driver.find_element_by_xpath('//*[@id="name"]')
-# AB_title.send_keys(nfo_album)
 
-# --------------------------------------------------------------------------
-
-# Subir a imagem
+# Cover image upload----------------------------------------------------------
 time.sleep(3)
 if not image_filename:
     print('ERROR: No IMAGE found')
@@ -901,16 +897,16 @@ else:
     time.sleep(4)
     pyautogui.press('enter')
     time.sleep(6)
-# --------------------------------------------------------------------------
+# END cover image upload-------------------------------------------------------
 
-# introduzir o nome da serie do audiobook na pagina dos uploads
+
+# Write serie name-----------------------------------------------------------
 AB_title = driver.find_element_by_name('series')
 nfo_series = nfo_series.replace("Series", "")
 AB_title.send_keys(nfo_series)
+# END Write serie name-------------------------------------------------------
 
-# --------------------------------------------------------------------------
-
-# series number
+# Write Series number---------------------------------------------------------
 time.sleep(2)
 driver.find_element_by_name('booknumber').clear()
 time.sleep(1)
@@ -927,15 +923,17 @@ else:
         pass
     ab_num_serie.send_keys(num_serie)
 time.sleep(2)
-# --------------------------------------------------------------------------
+# END Write Series number---------------------------------------------------------
 
-# author
+
+# Write Author---------------------------------------------------------
 pyautogui.press('tab', presses=1)
 # driver.find_element_by_name("author[]").click()  # This opens the windows file selector
 pyautogui.write(nfo_author)
 time.sleep(4)
 pyautogui.press('enter')
-# --------------------------------------------------------------------------
+# END Write author---------------------------------------------------------
+
 # narrator
 pyautogui.press('tab')
 # #driver.find_element_by_name("narrator[]").click()  # This opens the windows file selector
@@ -1061,7 +1059,6 @@ if nfo_comm == '':
     pass
 else:
     meta.write('Comment: ' + nfo_comm + '\n')
-
 
 if nfo_series == '':
     pass
@@ -1200,4 +1197,4 @@ logging.info('Thank you for using %s', script_version)
 
 # window.read(timeout=10000)
 # Console close
-input("Press Enter to Quit...")
+input("Press press a word and Enter to Quit...")
