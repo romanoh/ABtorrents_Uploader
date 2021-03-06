@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.2.8 - [UNRELEASED]
+[06.03.21] FIX: Some small fixes to code.
 [06.03.21] STR: Working on: improving code comments.
 [04.03.21] NEW: Added to description comment from MB4.
 [04.03.21] STR: Working on implementing: if nfo present get first metadata from it.

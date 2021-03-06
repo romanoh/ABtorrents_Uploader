@@ -50,6 +50,7 @@ logger_meta2 = logging.getLogger('Mb4 meta')
 logger_cover = logging.getLogger('cover')
 # END set up logging to file ----------------------------------------------------------------
 
+# Set variables
 nfo_author = ''
 nfo_narr = ''
 nfo_album = ''
@@ -79,7 +80,7 @@ def show_exception_and_exit(exc_type, exc_value, tb):
 
 
 sys.excepthook = show_exception_and_exit
-# If error pauses script---------------------------------------------------
+# END If error pauses script---------------------------------------------------
 
 
 # Log Version--------------------------------------------------------------
@@ -92,6 +93,7 @@ config = configparser.ConfigParser()
 
 # Config ini File
 if not os.path.exists('config.ini'):  # if it is not present
+
     config.add_section('FOLDERS')
     config.add_section('LOGIN')
 
@@ -103,14 +105,17 @@ if not os.path.exists('config.ini'):  # if it is not present
     config['LOGIN']['username'] = "0"
     config['LOGIN']['password'] = "0"
 
-    logger_config.info('Ini Config file created.')
+    logger_config.info('Ini Config file was created.')
 
     config.write(open('config.ini', 'w'))
 
     torrent_file_path = config['FOLDERS']['torrent_folder']  # to make folders
     torrent_file = config['FOLDERS']['torrent_file']  # make files
     login_session = config['LOGIN']['firefox_profile']  # profile firefox link
+    login_username = config['LOGIN']['username']
+    login_password = config['LOGIN']['password']
 else:
+    # if config file present:
     logger_config.info('The config.ini is present.')
 
     config.read(r'config.ini')
@@ -118,6 +123,9 @@ else:
     torrent_file_path = config['FOLDERS']['torrent_folder']
     torrent_file = config['FOLDERS']['torrent_file']
     login_session = config['LOGIN']['firefox_profile']
+    login_username = config['LOGIN']['username']
+    login_password = config['LOGIN']['password']
+
 # END Config-----------------------------------------------------------------
 
 # Paths to file/folder-------------------------------------------------------
@@ -381,9 +389,6 @@ else:
         # Here is the info from de audio file MP3
         logger_audio.info('Audio files MP3 found....')
 
-        # make this to mp3
-        nfo_comm = ''
-
         # album/title
         try:
             nfo_album = audio['TALB'].text[0]
@@ -402,7 +407,6 @@ else:
                 nfo_sub = nfo_album.split(':')[1]
                 logger_meta.info('Album Subtitle: %s', nfo_sub)
             except:
-                nfo_sub = ''
                 logger_meta.info('No Subtitle found.')
 
             # remove the initial numbers from album name
@@ -410,7 +414,6 @@ else:
             logger_meta.info('Final album tag: %s', nfo_album)
         except:
             logger_meta.warning('Album title not found.')
-            nfo_album = ''
 
         if nfo_sub == '':
             try:
@@ -545,7 +548,6 @@ else:
                 nfo_sub = nfo_album.split(':')[1]
                 logger_meta2.info('Album Subtitle: %s', nfo_sub)
             except:
-                nfo_sub = ''
                 logger_meta2.info('Album Subtitle not found.')
 
             # see if it has number at start
@@ -571,7 +573,7 @@ else:
 
         # Artist/author
         nfo_author = mp4_audio['\xa9ART']
-        print('INFO MB4: Author:', nfo_author[0])
+        logger_meta2.info('Author: %s', nfo_author[0])
         nfo_author = nfo_author[0]
         # correct format of author(ex: A. B. Mark)
         nfo_author = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_author)
@@ -579,12 +581,12 @@ else:
         # Narrator
         try:
             nfo_narr = mp4_audio['\xa9wrt']
-            print('INFO MB4: Narrator:', nfo_narr[0])
+            logger_meta2.info('Narrator: %s', nfo_narr[0])
             nfo_narr = nfo_narr[0]
             # correct format of narrator(ex: A. B. Mark)
             nfo_narr = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_narr)
         except:
-            print('INFO MB4: No Narrator found.')
+            logger_meta2.warning('Narrator not found.')
 
         # Genre
         try:
@@ -592,7 +594,7 @@ else:
             print('INFO MB4: Genre:', nfo_genre[0])
             nfo_genre = nfo_genre[0]
         except:
-            print('INFO MB4: No Genre found.')
+            logger_meta2.warning('Genre not found.')
 
         # Year
         try:
@@ -600,7 +602,7 @@ else:
             print('INFO MB4: Year:', nfo_year[0])
             nfo_year = nfo_year[0]
         except:
-            print('INFO MB4: No Year found.')
+            logger_meta2.warning('Year not found.')
 
         # Asin
         try:
@@ -608,7 +610,7 @@ else:
             print('INFO MB4: Asin:', nfo_asin[0].decode('utf8'))
             nfo_asin = nfo_asin[0].decode('utf8')
         except:
-            print('INFO MB4: No Asin.')
+            logger_meta2.warning('Asin not found.')
 
         # Publisher
         try:
@@ -616,7 +618,7 @@ else:
             print('INFO MB4: Publisher:', nfo_publi[0])
             nfo_publi = nfo_publi[0]
         except:
-            print('INFO MB4: No Publisher.')
+            logger_meta2.warning('Publisher not found.')
 
         # Copyright
         try:
@@ -624,7 +626,7 @@ else:
             print('INFO MB4: Copyright:', nfo_copy[0])
             nfo_copy = nfo_copy[0]
         except:
-            print('INFO MB4: No Copyright.')
+            logger_meta2.warning('Copyright not found.')
 
         # Series
         try:
@@ -632,20 +634,20 @@ else:
             print('INFO MB4: Series(1):', nfo_series[0].decode('utf8'))
             nfo_series = nfo_series[0].decode('utf8')
         except:
-            print('INFO MB4: No Series(1) found...')
+            logger_meta2.warning('Series(1) not found.')
 
         if not nfo_series:
             try:
                 nfo_series = mp4_audio['\xa9grp']
                 nfo_series = nfo_series[0]
-                print('INFO MB4: Series(2) found:', nfo_series[0])
+                print('INFO MB4: Series(2) found:', nfo_series)
             except:
-                print('INFO MB4: No Series(2) found...')
+                logger_meta2.warning('Series(2) not found.')
 
         # If series iqual author move along
         if nfo_series == nfo_author:
             nfo_series = ''
-            print('INFO MB4: Series(2) found but is the same as author...removed')
+            logger_meta2.warning('Series(2) found but is the same as author...removed.')
         else:
             pass
 
@@ -654,13 +656,13 @@ else:
             print('INFO MB4: Series number:', num_serie[0].decode('utf8'))
             num_serie = num_serie[0].decode('utf8')
         except:
-            print('INFO MB4: Series number(1) not found.')
+            logger_meta2.warning('Series number(1) not found.')
 
         if not num_serie:
             num_serie = num_serie3
             print('INFO MB4: Series number(2) found:', num_serie)
         else:
-            print('INFO MB4: Series number(2) not found.')
+            logger_meta2.warning('Series number(2) not found.')
 
         # Link
         try:
@@ -668,40 +670,40 @@ else:
             print('INFO MB4: Link:', nfo_link[0].decode('utf8'))
             nfo_link = nfo_link[0].decode('utf8')
         except:
-            print('INFO MB4: No Link.')
+            logger_meta2.warning('Link not found.')
 
         try:
             nfo_comm = mp4_audio['\xa9cmt']
-            print('INFO MB4: Comment:', nfo_comm[0].decode('utf8'))
-            nfo_comm = nfo_comm[0].decode('utf8')
+            print('INFO MB4: Comment:', nfo_comm[0])
+            nfo_comm = nfo_comm[0]
         except:
-            print('INFO MB4: No Comment.')
+            logger_meta2.warning('Comment not found.')
 
         # File Type
         nfo_audio = f.mime[0]
-        print('INFO MB4: File Type:', nfo_audio)
+        logger_meta2.info('File Type: %s', nfo_audio)
 
         # bitrate
         nfo_bitrate = int(f.info.bitrate / 1000)
-        print('INFO MB4: bitrate:', nfo_bitrate)
+        logger_meta2.info('Bitrate: %s', nfo_bitrate)
 
         # desc
         try:
             nfo_desc = mp4_audio['desc']
-            print('INFO MB4: Description:', nfo_desc[0])
+            logger_meta2.info('Description: %s', nfo_desc[0])
             nfo_desc = nfo_desc[0]
         except:
-            print('INFO MB4: No Description.')
+            logger_meta2.warning('Description not found.')
 
         nfo_full = f.info.pprint()
-        print('INFO MB4: Full audio stream information:', nfo_full)
+        logger_meta2.info('Full audio stream information: %s', nfo_full)
         time.sleep(3)
 
 # End script
 # raise SystemExit(0)
 
 # Find image file ---------------------------------------------------------
-logger_cover.info('Starting looking for Cover file(s)....')
+logger_cover.info('Starting looking for Image Cover file(s)....')
 image_filename = None
 
 
@@ -764,7 +766,7 @@ else:
 # Login -----------------------------------------------------------------------
 print('INFO-Internet: Opening firefox and login. Please wait...')
 if login_session == '0':
-    print('INFO LOGIN: no Firefox session present...write your url.')
+    print('INFO LOGIN: Firefox session not present...write your url.')
     # Choose firefox session folder
     sg.theme('Dark Blue 3')  # please make your windows colorful
     layout = [[sg.Text('Here you can enter the firefox session.')],
@@ -980,6 +982,7 @@ range62 = range(62, 63)
 range64 = range(64, 65)
 range192 = range(185, 193)
 range128 = range(119, 129)
+range125588 = '125588'
 
 if nfo_bitrate == range128:
     nfo_bitrate = '128'
@@ -995,6 +998,9 @@ if nfo_bitrate == range192:
     nfo_bitrate = '192'
 if nfo_bitrate == range62:
     nfo_bitrate = '62'
+if nfo_bitrate == range125588:
+    nfo_bitrate = '128'
+
 
 nfo_bitrate = str(nfo_bitrate) + kbps
 
@@ -1046,6 +1052,11 @@ if nfo_copy == '':
 else:
     meta.write('Copyright: ' + nfo_copy + '\n')
 
+if nfo_comm == '':
+    pass
+else:
+    meta.write('Comment: ' + nfo_comm + '\n')
+
 if nfo_link == '':
     pass
 else:
@@ -1054,11 +1065,6 @@ else:
 meta.write(
     '\n' + '[color=#FF9933]...::**::... [/color][color=#faa702][size=5][b]Book Description[/b][/size][/color][color=#FF9933]...::**::... [/color]' + '\n' + '\n')
 meta.write(str(nfo_desc) + '\n' + '\n')
-
-if nfo_comm == '':
-    pass
-else:
-    meta.write('Comment: ' + nfo_comm + '\n')
 
 if nfo_series == '':
     pass
@@ -1086,7 +1092,7 @@ with open(file, 'r', encoding='utf-8-sig') as f:
 elem = driver.find_element_by_xpath(
     "/html/body/div/div[1]/table/tbody/tr/td/div[2]/form/table/tbody/tr[12]/td[2]/div/div/textarea")
 elem.send_keys(data, '\n')
-time.sleep(2)
+time.sleep(3)
 
 # --------------------------------------------------------------------------
 # Genre
@@ -1095,7 +1101,7 @@ if re.compile('|'.join(list_romance), re.IGNORECASE).search(
         nfo_genre):  # re.IGNORECASE is used to ignore case
     nfo_genre = 'Romance'
 
-list_horror = ['Horror', 'Zombie', 'Apocalypse']
+list_horror = ['Horror', 'Zombie', 'Apocalypse', 'Post-Apocalyptic']
 if re.compile('|'.join(list_horror), re.IGNORECASE).search(
         nfo_genre):  # re.IGNORECASE is used to ignore case
     nfo_genre = 'Horror'
