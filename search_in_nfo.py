@@ -76,25 +76,14 @@ else:
     logger_nfo.info('Metadata will be made from audio file metadata.')
     pass
 # -------------------------------------------------------------------------------
-try:
-    search_album = 'Title:'
+search_album = ['TiTlE2', 'Title:', 'TiTlE......:']
 
+search_author = 'AUTHOR.....:'
+search_author = 'Author:'
 
-except:
-    search_album = 'TiTlE......:'
-
-
-try:
-    search_author = 'AUTHOR.....:'
-except:
-    search_author = 'Author:'
-
-try:
-    search_narr = 'Read By:'
-except NameError:
-    search_narr = 'READ BY....:'
-except:
-    search_narr = 'Narrator:'
+search_narr = 'Read By:'
+search_narr = 'READ BY....:'
+search_narr = 'Narrator:'
 
 search_copyright = 'Copyright:'
 search_genre = 'Genre:'
@@ -102,30 +91,15 @@ search_duration = 'Duration:'
 search_publisher = 'Publisher:'
 search_unabridged = 'Unabridged:'
 
-# Series
 search_series = 'Series:       '
 search_series = 'Series Name:'
 
-# Series number
-# search_series_num = 'Series'
 search_series_num = 'Position in Series:'
 
 search_release = 'Release:'
 search_size = 'Size:'
 
-time.sleep(1)
-logger_nfo.info('Searching Author...')
-# search author
-matched_lines = search_string_in_file(nfofile, search_author)
-logger_nfo.info('Total Matched lines: %s', len(matched_lines))
-for elem in matched_lines:
-    linha = elem[0]
-    author = elem[1]
-# remove everything after :
-nfo_author = re.sub(r'^[^:]*:', r'', author).lstrip().title()
-time.sleep(1)
-logger_nfo.info('Author found: %s', nfo_author)
-time.sleep(1)
+# --------------------------------------------------------------------------
 
 logger_nfo.info('Searching Title book...')
 time.sleep(1)
@@ -135,6 +109,7 @@ logger_nfo.info('Total Matched lines: %s', len(matched_lines2))
 for elem2 in matched_lines2:
     linha2 = elem2[0]
     title = elem2[1]
+print(title)
 # remove (Unabridged)
 nfo_album = re.sub(r'(Unabridged)', r'', title)
 # remove - Book 1
@@ -142,10 +117,27 @@ nfo_album = re.sub(r'- Book 1', r'', nfo_album)
 # retirar tudo antes do char :
 nfo_album = re.sub(r'^[^:]*:', r'', nfo_album).lstrip().title()
 # if book as series
+print(nfo_album)
 nfo_album2 = nfo_album.split(' - ')
-nfo_album = nfo_album2[1]
+try:
+    nfo_album = nfo_album2[1]
+except:
+    pass
 logger_nfo.info('Book found: %s', nfo_album)
 
+logger_nfo.info('Searching Author...')
+# search author
+matched_lines = search_string_in_file(nfofile, search_author)
+logger_nfo.info('Total Matched lines: %s', len(matched_lines))
+for elem in matched_lines:
+    linha = elem[0]
+    author = elem[1]
+# remove everything after :
+print('author', author)
+nfo_author = re.sub(r'^[^:]*:', r'', author).lstrip().title()
+time.sleep(1)
+logger_nfo.info('Author found: %s', nfo_author)
+time.sleep(1)
 
 logger_nfo.info('Searching narrator...')
 time.sleep(1)
@@ -213,7 +205,6 @@ else:
     # nfo_genre = re.sub(r'\(tmp_Genre2\) ', r'', nfo_genre)
     logger_nfo.info('Series number found: %s', num_serie)
     time.sleep(1)
-
 
 # search_genre Type
 logger_nfo.info('Searching Genre...')
@@ -353,4 +344,4 @@ with open(nfofile, "r") as saveoutput:
             # logger_nfo.info('Description: %s', join)
             print(join)
         # else:
-            # print('No description found.')
+        # print('No description found.')

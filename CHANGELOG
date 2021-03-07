@@ -15,7 +15,6 @@ Beta v.0.2.8 - [UNRELEASED]
 [01.03.21] FIX: Fix a bug in mp3 link tag.
 [01.03.21] FIX: Fix a bug in mp3 encoder tag.
 
-
 Beta v.0.2.7
 [28.02.21] STR: Still improving log system.
 [27.02.21] STR: Working on implementing: if nfo present get first metadata from it.

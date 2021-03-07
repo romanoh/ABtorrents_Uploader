@@ -21,8 +21,8 @@ import codecs
 import sys
 import logging
 
-script_version = 'Beta v.0.2.8 - ABtorrents uploader Helper'
-script_version_short = 'Beta v.0.2.8'
+script_version = 'Beta v.0.2.9 - ABtorrents uploader Helper'
+script_version_short = 'Beta v.0.2.9'
 
 # set up logging to file -------------------------------------------------------------------
 logging.basicConfig(level=logging.INFO,
@@ -80,7 +80,7 @@ def show_exception_and_exit(exc_type, exc_value, tb):
 
 
 sys.excepthook = show_exception_and_exit
-# END If error pauses script---------------------------------------------------
+# END If error pauses script-----------------------------------------------
 
 
 # Log Version--------------------------------------------------------------
