@@ -88,39 +88,6 @@ search_size = 'Size:'
 
 
 
-# search_Release Release
-print('INFO: Searching Release...')
-time.sleep(1)
-matched_lines14 = search_string_in_file(nfofile, search_release)
-if not matched_lines14:
-    print('INFO: Release not Found!')
-    nfo_release = None
-else:
-    print('Total Matched lines : ', len(matched_lines14))
-    for elem14 in matched_lines14:
-        linha14 = elem14[0]
-        release = elem14[1]
-    # retirar tudo antes do char :.
-    nfo_release = re.sub(r'^[^:]*: ', r'', release).lstrip()
-    print('INFO: Release found:', nfo_release)
-    time.sleep(1)
-
-# search_Release Release
-print('INFO: Searching Size...')
-time.sleep(1)
-matched_lines20 = search_string_in_file(nfofile, search_size)
-if not matched_lines20:
-    print('INFO: Size not Found!')
-    nfo_size = None
-else:
-    print('Total Matched lines : ', len(matched_lines20))
-    for elem20 in matched_lines20:
-        linha20 = elem20[0]
-        size = elem20[1]
-    # retirar tudo antes do char :.
-    nfo_size = re.sub(r'^[^:]*: ', r'', size).lstrip()
-    print('INFO: Size found:', nfo_size)
-    time.sleep(1)
 
 search_desc = 'Description'
 # search_desc

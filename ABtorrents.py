@@ -71,6 +71,7 @@ nfo_full = ''
 nfo_comm = ''
 nfo_duration = ''
 
+
 # If error pauses script---------------------------------------------------
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
@@ -1001,7 +1002,6 @@ if nfo_bitrate == range62:
 if nfo_bitrate == range125588:
     nfo_bitrate = '128'
 
-
 nfo_bitrate = str(nfo_bitrate) + kbps
 
 matches = (
@@ -1020,6 +1020,7 @@ time.sleep(2)
 
 # create a file to write the metadata
 meta = codecs.open('metadata_' + nfo_album + '.txt', 'w', 'utf-8-sig')
+meta.write('[center]')
 meta.write(
     '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n')
 
@@ -1084,6 +1085,7 @@ meta.write('File Type: ' + nfo_audio + '\n')
 meta.write('Bitrate: ' + nfo_bitrate + '\n')
 meta.write('Technical: ' + nfo_full + '\n')
 meta.write('[size=1]' + script_version + '[/size]')
+meta.write('[/center]')
 meta.close()
 
 # Write all data from file to description box
