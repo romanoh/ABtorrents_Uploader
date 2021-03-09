@@ -69,7 +69,7 @@ nfo_desc = ''
 nfo_encoder = ''
 nfo_full = ''
 nfo_comm = ''
-
+nfo_duration = ''
 
 # If error pauses script---------------------------------------------------
 def show_exception_and_exit(exc_type, exc_value, tb):
@@ -1017,7 +1017,8 @@ else:
 time.sleep(2)
 # --------------------------------------------------------------------------
 # Description box
-# if nfofile == "No NFO present":
+
+# create a file to write the metadata
 meta = codecs.open('metadata_' + nfo_album + '.txt', 'w', 'utf-8-sig')
 meta.write(
     '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n')
@@ -1032,10 +1033,10 @@ meta.write('Narrator: ' + nfo_narr + '\n')
 meta.write('Genre: ' + nfo_genre + '\n')
 meta.write('Year: ' + str(nfo_year) + '\n')
 
-# if nfo_duration == '':
-#     pass
-# else:
-#     meta.write('Duration: ' + nfo_duration + '\n')
+if nfo_duration == '':
+    pass
+else:
+    meta.write('Duration: ' + nfo_duration + '\n')
 
 if nfo_asin == '':
     pass
@@ -1085,6 +1086,7 @@ meta.write('Technical: ' + nfo_full + '\n')
 meta.write('[size=1]' + script_version + '[/size]')
 meta.close()
 
+# Write all data from file to description box
 file = 'metadata_' + nfo_album + '.txt'
 with open(file, 'r', encoding='utf-8-sig') as f:
     data = f.readlines()
@@ -1203,4 +1205,4 @@ logging.info('Thank you for using %s', script_version)
 
 # window.read(timeout=10000)
 # Console close
-input("Press press a word and Enter to Quit...")
+input("Press press a word/number and Enter to Quit...")

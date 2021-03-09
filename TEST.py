@@ -16,13 +16,15 @@ nfo_sub = ''
 nfo_genre = ''
 nfo_year = ''
 nfo_asin = ''
-nfo_publi = ''
+nfo_publisher = ''
 nfo_copy = ''
 nfo_link = ''
 nfo_desc = ''
 nfo_encoder = ''
 nfo_full = ''
 nfo_comm = ''
+nfo_duration = ''
+nfo_unabridged = ''
 
 file = "Y:\\Genre Fiction\\Emerald O'Brien\\ 2020. What She Found (64kb)\\000-emerald_obrien_-_what_she_found-audiobook-web-en-2020-oldswe_int.nfo"
 
@@ -71,6 +73,7 @@ with open(file, "r+") as file1:
                     logger_nfo.info('Found Book Title: %s', nfo_album)
                 except:
                     logger_nfo.info('Found Book Title: %s', nfo_album)
+
 if nfo_album == '':
     logger_nfo.warning('Book Title not found.')
 
@@ -133,9 +136,127 @@ with open(file, "r+") as file1:
 if nfo_series == '':
     logger_nfo.warning('Series not found.')
 else:
+
+    try:
+        num_serie2 = nfo_series.split(' Book ')
+        num_serie = num_serie2[1]
+        logger_nfo.info('Series number found: %s', num_serie)
+    except:
+        logger_nfo.warning('Series number not Found!')
+
     nfo_series = re.sub(r' Book 1', r'', nfo_series)
     nfo_series = re.sub(r' Book 2', r'', nfo_series)
     nfo_series = re.sub(r' Book 3', r'', nfo_series)
     nfo_series = re.sub(r' Book 4', r'', nfo_series)
     logger_nfo.info('Series Found: %s', nfo_series)
 
+if num_serie == '':
+    # Book series number
+    _number = ["Position", "sfdsfdsfsd"]
+    logger_nfo.info('Searching Series number...')
+    with open(file, "r+") as file1:
+        fileline1 = file1.readlines()
+        for x in _number:  # <--- Loop through the list to check
+            for line in fileline1:  # <--- Loop through each line
+                line = line.casefold()  # <--- Set line to lowercase
+                if x.casefold() in line:
+                    logger_nfo.info('Line found with word: %s', x)
+                    num_serie = line
+
+                    # remove everything before :
+                    num_serie = re.sub(r'^[^:]*:', r'', num_serie).lstrip().title()
+                    logger_nfo.info('Narrator Found: %s', num_serie)
+    if num_serie == '':
+        logger_nfo.warning('Series number not found.')
+else:
+    pass
+
+# Book Genre
+_genre = ["Genre", "wrwrwr"]
+logger_nfo.info('Searching Genre...')
+with open(file, "r+") as file1:
+    fileline1 = file1.readlines()
+    for x in _genre:  # <--- Loop through the list to check
+        for line in fileline1:  # <--- Loop through each line
+            line = line.casefold()  # <--- Set line to lowercase
+            if x.casefold() in line:
+                logger_nfo.info('Line found with word: %s', x)
+                nfo_genre = line
+
+                # remove everything before :
+                nfo_genre = re.sub(r'^[^:]*:', r'', nfo_genre).lstrip().title()
+                logger_nfo.info('Genre Found: %s', nfo_genre)
+if nfo_genre == '':
+    logger_nfo.warning('Genre not found.')
+
+# Book Copyright
+_copy = ["Copyright", "dfdfg"]
+logger_nfo.info('Searching Copyright...')
+with open(file, "r+") as file1:
+    fileline1 = file1.readlines()
+    for x in _copy:  # <--- Loop through the list to check
+        for line in fileline1:  # <--- Loop through each line
+            line = line.casefold()  # <--- Set line to lowercase
+            if x.casefold() in line:
+                logger_nfo.info('Line found with word: %s', x)
+                nfo_copy = line
+
+                # remove everything before :
+                nfo_copy = re.sub(r'^[^:]*:', r'', nfo_copy).lstrip().title()
+                logger_nfo.info('Copyright Found: %s', nfo_copy)
+if nfo_copy == '':
+    logger_nfo.warning('Copyright not found.')
+
+# Book Duration
+_dura = ["Duration", "dfdfg"]
+logger_nfo.info('Searching Duration...')
+with open(file, "r+") as file1:
+    fileline1 = file1.readlines()
+    for x in _dura:  # <--- Loop through the list to check
+        for line in fileline1:  # <--- Loop through each line
+            line = line.casefold()  # <--- Set line to lowercase
+            if x.casefold() in line:
+                logger_nfo.info('Line found with word: %s', x)
+                nfo_duration = line
+
+                # remove everything before :
+                nfo_duration = re.sub(r'^[^:]*:', r'', nfo_duration).lstrip().title()
+                logger_nfo.info('Duration Found: %s', nfo_duration)
+if nfo_duration == '':
+    logger_nfo.warning('Duration not found.')
+
+# Book Publisher
+_publisher = ["Publisher", "etret"]
+logger_nfo.info('Searching Narrator...')
+with open(file, "r+") as file1:
+    fileline1 = file1.readlines()
+    for x in _publisher:  # <--- Loop through the list to check
+        for line in fileline1:  # <--- Loop through each line
+            line = line.casefold()  # <--- Set line to lowercase
+            if x.casefold() in line:
+                logger_nfo.info('Line found with word: %s', x)
+                nfo_publisher = line
+
+                # remove everything before :
+                nfo_publisher = re.sub(r'^[^:]*:', r'', nfo_publisher).lstrip().title()
+                logger_nfo.info('Publisher Found: %s', nfo_publisher)
+if nfo_publisher == '':
+    logger_nfo.warning('Publisher not found.')
+
+# Book unbridged
+_uno = ["Unbridged", "yertret"]
+logger_nfo.info('Searching Unbridged...')
+with open(file, "r+") as file1:
+    fileline1 = file1.readlines()
+    for x in _uno:  # <--- Loop through the list to check
+        for line in fileline1:  # <--- Loop through each line
+            line = line.casefold()  # <--- Set line to lowercase
+            if x.casefold() in line:
+                logger_nfo.info('Line found with word: %s', x)
+                nfo_unabridged = line
+
+                # remove everything before :
+                nfo_unabridged = re.sub(r'^[^:]*:', r'', nfo_unabridged).lstrip().title()
+                logger_nfo.info('Unbridged Found: %s', nfo_unabridged)
+if nfo_unabridged == '':
+    logger_nfo.warning('Unbridged not found.')
