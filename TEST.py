@@ -5,31 +5,31 @@ import time
 import logging
 
 # Set variables
+nfo_album = ''
 nfo_author = ''
 nfo_narr = ''
-nfo_album = ''
-nfo_series = ''
-num_serie = ''
-nfo_audio = ''
-nfo_bitrate = ''
-nfo_sub = ''
 nfo_genre = ''
 nfo_year = ''
+nfo_duration = ''
 nfo_asin = ''
 nfo_publisher = ''
 nfo_copy = ''
+nfo_audio = ''
+nfo_bitrate = ''
+nfo_sub = ''
+nfo_comm = ''
 nfo_link = ''
 nfo_desc = ''
+nfo_series = ''
+num_serie = ''
 nfo_encoder = ''
 nfo_full = ''
-nfo_comm = ''
-nfo_duration = ''
 nfo_unabridged = ''
 nfo_release = ''
 nfo_size = ''
 nfo_url = ''
 
-file = "Y:\\Sci-Fi & Fantasy\\Jerry Merritt\\ 2017. A Gift of Time (160kb)\\Jerry Merritt - 2017 - A Gift of Time (Unabridged).nfo"
+nfofile = "Y:\\Sci-Fi & Fantasy\\Jerry Merritt\\ 2017. A Gift of Time (160kb)\\Jerry Merritt - 2017 - A Gift of Time (Unabridged).nfo"
 
 # set up logging to file
 logging.basicConfig(level=logging.INFO,
@@ -55,7 +55,7 @@ logger_nfo.info('Starting looking for NFO file....')
 # Book Title
 _title = ["Title:", "Title.."]
 logger_nfo.info('Searching Title book...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _title:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -83,7 +83,7 @@ if nfo_album == '':
 # Book Author
 _author = ["Author:", "Author.."]
 logger_nfo.info('Searching Author book...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _author:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -101,7 +101,7 @@ if nfo_author == '':
 # Book Narrator
 _narrator = ["Read by:", "Narrator:", "Read by.."]
 logger_nfo.info('Searching Narrator...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _narrator:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -119,7 +119,7 @@ if nfo_narr == '':
 # Book Series
 _series = ["Series:", "Series Name:"]
 logger_nfo.info('Searching Series...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _series:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -156,7 +156,7 @@ if num_serie == '':
     # Book series number
     _number = ["Position in", "sfdsfdsfsd"]
     logger_nfo.info('Searching Series number...')
-    with open(file, "r+") as file1:
+    with open(nfofile, "r+") as file1:
         fileline1 = file1.readlines()
         for x in _number:  # <--- Loop through the list to check
             for line in fileline1:  # <--- Loop through each line
@@ -176,7 +176,7 @@ else:
 # Book Genre
 _genre = ["Genre:", "GENRE.."]
 logger_nfo.info('Searching Genre...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _genre:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -194,7 +194,7 @@ if nfo_genre == '':
 # Book Copyright
 _copy = ["Copyright:", "Copyright.."]
 logger_nfo.info('Searching Copyright...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _copy:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -212,7 +212,7 @@ if nfo_copy == '':
 # Book Duration
 _dura = ["Duration:", "Time:", 'TiME..', "Duration.."]
 logger_nfo.info('Searching Duration...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _dura:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -230,7 +230,7 @@ if nfo_duration == '':
 # Book Publisher
 _publisher = ["Publisher:", "PUBLiSHER.."]
 logger_nfo.info('Searching Publisher...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _publisher:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -248,7 +248,7 @@ if nfo_publisher == '':
 # Book unbridged
 _uno = ["Unabridged:", "Unabridged.."]
 logger_nfo.info('Searching Unbridged...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _uno:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -266,7 +266,7 @@ if nfo_unabridged == '':
 # Book Release
 _release = ["Release:", "STOREDATE..", "Release.."]
 logger_nfo.info('Searching Release...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _release:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -286,7 +286,7 @@ if nfo_release == '':
 # Book size
 _size = ["Size:", "SiZE.."]
 logger_nfo.info('Searching Size...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _size:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -304,7 +304,7 @@ if nfo_size == '':
 # Book url
 _url = ["URL:", "URL.."]
 logger_nfo.info('Searching Url...')
-with open(file, "r+") as file1:
+with open(nfofile, "r+") as file1:
     fileline1 = file1.readlines()
     for x in _url:  # <--- Loop through the list to check
         for line in fileline1:  # <--- Loop through each line
@@ -322,7 +322,7 @@ if nfo_url == '':
 
 # Description
 copy = False
-with open(file, "r") as saveoutput:
+with open(nfofile, "r") as saveoutput:
     for line in saveoutput:
         if 'Description' in line:
             copy = True

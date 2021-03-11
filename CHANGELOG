@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+Beta v.0.3 - [UNRELEASED]
+[10.03.21] NEW: If nfo file present get first metadata from it, then the tags are replaced
+from metadata from audio tags if present.
+
 Beta v.0.2.9 - [UNRELEASED]
 [09.03.21] STR: Working on implementing: if nfo present get first metadata from it.
 [09.03.21] NEW: Center the description.
