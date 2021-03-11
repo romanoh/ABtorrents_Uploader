@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.3 - [UNRELEASED]
+[11.03.21] NEW: Log system implemented, a log.log file will be created.
+[11.03.21] FIX: Deal with Genre tag if is Audiobook.
 [10.03.21] NEW: If nfo file present get first metadata from it, then the tags are replaced
 from metadata from audio tags if present.
 

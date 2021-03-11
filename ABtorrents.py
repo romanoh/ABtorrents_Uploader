@@ -48,6 +48,8 @@ logger_audio = logging.getLogger('audiofile')
 logger_meta = logging.getLogger('Mp3 meta')
 logger_meta2 = logging.getLogger('Mb4 meta')
 logger_cover = logging.getLogger('cover')
+logger_internet = logging.getLogger('site')
+
 # END set up logging to file ----------------------------------------------------------------
 
 # Set variables
@@ -737,8 +739,11 @@ else:
 
         # Genre
         try:
-            nfo_genre = audio['TCON'].text[0]
-            logger_meta.info('Genre: %s', nfo_genre)
+            if nfo_genre == 'Audiobook':
+                pass
+            else:
+                nfo_genre = audio['TCON'].text[0]
+                logger_meta.info('Genre: %s', nfo_genre)
         except:
             logger_meta.info('No GENRE found.')
 
@@ -881,15 +886,18 @@ else:
         # Genre
         try:
             nfo_genre = mp4_audio['\xa9gen']
-            print('INFO MB4: Genre:', nfo_genre[0])
-            nfo_genre = nfo_genre[0]
+            if nfo_genre == 'Audiobook':
+                pass
+            else:
+                logger_meta2.info('Genre: %s', nfo_genre[0])
+                nfo_genre = nfo_genre[0]
         except:
             logger_meta2.warning('Genre not found.')
 
         # Year
         try:
             nfo_year = mp4_audio['\xa9day']
-            print('INFO MB4: Year:', nfo_year[0])
+            logger_meta2.info('Year: %s', nfo_year[0])
             nfo_year = nfo_year[0]
         except:
             logger_meta2.warning('Year not found.')
@@ -897,16 +905,16 @@ else:
         # Asin
         try:
             nfo_asin = mp4_audio['----:com.apple.iTunes:Asin']
-            print('INFO MB4: Asin:', nfo_asin[0].decode('utf8'))
             nfo_asin = nfo_asin[0].decode('utf8')
+            logger_meta2.info('Asin: %s', nfo_asin)
         except:
             logger_meta2.warning('Asin not found.')
 
         # Publisher
         try:
             nfo_publisher = mp4_audio['----:com.apple.iTunes:Publisher']
-            print('INFO MB4: Publisher:', nfo_publisher[0].decode('utf8'))
             nfo_publisher = nfo_publisher[0].decode('utf8')
+            logger_meta2.info('Publisher: %s', nfo_publisher)
         except:
             logger_meta2.warning('Publisher not found.')
 
@@ -914,8 +922,8 @@ else:
         if nfo_publisher == '':
             try:
                 nfo_publisher = mp4_audio['\xa9pub']
-                print('INFO MB4: Publisher(2):', nfo_publisher[0].decode('utf8'))
                 nfo_publisher = nfo_publisher[0].decode('utf8')
+                logger_meta2.info('Publisher(2): %s', nfo_publisher)
             except:
                 logger_meta2.warning('Publisher(2) not found.')
         else:
@@ -924,24 +932,24 @@ else:
         # Copyright
         try:
             nfo_copy = mp4_audio['cprt']
-            print('INFO MB4: Copyright:', nfo_copy[0])
             nfo_copy = nfo_copy[0]
+            logger_meta2.info('Copyright: %s', nfo_copy)
         except:
             logger_meta2.warning('Copyright not found.')
 
         # Series
         try:
             nfo_series = mp4_audio['----:com.apple.iTunes:SERIES']
-            print('INFO MB4: Series(1):', nfo_series[0].decode('utf8'))
             nfo_series = nfo_series[0].decode('utf8')
+            logger_meta2.info('Series(1): %s', nfo_series)
         except:
             logger_meta2.warning('Series(1) not found.')
 
-        if not nfo_series:
+        if nfo_series == '':
             try:
                 nfo_series = mp4_audio['\xa9grp']
                 nfo_series = nfo_series[0]
-                print('INFO MB4: Series(2) found:', nfo_series)
+                logger_meta2.info('Series(2) found: %s', nfo_series)
             except:
                 logger_meta2.warning('Series(2) not found.')
 
@@ -954,29 +962,30 @@ else:
 
         try:
             num_serie = mp4_audio['----:com.apple.iTunes:series-part']
-            print('INFO MB4: Series number:', num_serie[0].decode('utf8'))
             num_serie = num_serie[0].decode('utf8')
+            logger_meta2.info('Series number(1): %s', num_serie)
         except:
             logger_meta2.warning('Series number(1) not found.')
 
-        if not num_serie:
+        if num_serie == '':
             num_serie = num_serie3
-            print('INFO MB4: Series number(2) found:', num_serie)
+            logger_meta2.info('Series number(2): %s', num_serie)
+
         else:
             logger_meta2.warning('Series number(2) not found.')
 
         # Link
         try:
             nfo_link = mp4_audio['----:com.apple.iTunes:WWWAUDIOFILE']
-            print('INFO MB4: Link:', nfo_link[0].decode('utf8'))
             nfo_link = nfo_link[0].decode('utf8')
+            logger_meta2.info('Link: %s', nfo_link)
         except:
             logger_meta2.warning('Link not found.')
 
         try:
             nfo_comm = mp4_audio['\xa9cmt']
-            print('INFO MB4: Comment:', nfo_comm[0])
             nfo_comm = nfo_comm[0]
+            logger_meta2.info('Comment: %s', nfo_comm)
         except:
             logger_meta2.warning('Comment not found.')
 
@@ -1065,9 +1074,9 @@ else:
 # END Find image file ---------------------------------------------------------
 
 # Login -----------------------------------------------------------------------
-print('INFO-Internet: Opening firefox and login. Please wait...')
+logger_internet.info('Opening firefox and login. Please wait...')
 if login_session == '0':
-    print('INFO LOGIN: Firefox session not present...write your url.')
+    logger_internet.warning('Firefox session not present...write your url.')
     # Choose firefox session folder
     sg.theme('Dark Blue 3')  # please make your windows colorful
     layout = [[sg.Text('Here you can enter the firefox session.')],
@@ -1126,7 +1135,7 @@ driver.get("https://www.abtorrents.me/upload_audiobook.php")
 # Change to author
 button_author = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div[1]/ul/li[1]/a")
 button_author.click()
-print('INFO: Writing the Author...')
+logger_internet.info('Adding the Author to the database...')
 time.sleep(4)
 
 # Writing author
@@ -1143,7 +1152,7 @@ time.sleep(4)
 # Change to narrator Link
 narrator_button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[4]/a")
 narrator_button.click()
-print('INFO: Writing the Narrator...')
+logger_internet.info('Adding the Narrator to the database...')
 time.sleep(4)
 
 # Writing Narrator
@@ -1160,25 +1169,25 @@ time.sleep(4)
 # Change to Upload Page--------------------------------------------------------
 upload_Button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[1]/a")
 upload_Button.click()
-print('INFO: Changing to the upload page...')
+logger_internet.info('Changing to the upload web page...')
 # END Change to Upload Page----------------------------------------------------
 
 # Torrent file --------------------------------------------------------------
 # Change Torrent Name
 time.sleep(3)
-print('INFO-Torrent: Changing the name of torrent.')
-
+logger_internet.info('Changing the name of .torrent file to title name.')
 t_path = path_to_torrent + '/' + newadded + '.torrent'
 b_path = path_to_torrent + '/' + nfo_album + '.torrent'
 try:
     os.rename(t_path, b_path)
 except:
-    print('ERROR RENAME: Impossible to rename file already present.')
+    logger_internet.warning('Impossible to rename, file already present.')
     window.read(timeout=3000)
 # END Change Torrent Name
 
 
 # Select torrent file
+logger_internet.info('Uploading .torrent file...')
 file_upload = WebDriverWait(driver, 3).until(
     EC.presence_of_element_located((By.ID, "torrent"))
 )
@@ -1190,9 +1199,10 @@ file_upload.send_keys(os.path.abspath(b_path))
 # Cover image upload----------------------------------------------------------
 time.sleep(3)
 if not image_filename:
-    print('ERROR: No IMAGE found')
+    logger_internet.warning('Image cover not found...')
     image_filename = None
 else:
+    logger_internet.info('Uploading image cover...')
     image_filename = image_filename.replace('/', '\\')  # substituir o \ por /
     driver.find_element_by_id("droppable").click()  # This opens the windows file selector
     time.sleep(4)
@@ -1204,19 +1214,21 @@ else:
 
 
 # Write serie name-----------------------------------------------------------
+logger_internet.info('Writing Series name...')
 AB_title = driver.find_element_by_name('series')
 nfo_series = nfo_series.replace("Series", "")
 AB_title.send_keys(nfo_series)
 # END Write serie name-------------------------------------------------------
 
 # Write Series number---------------------------------------------------------
+logger_internet.info('Writing Series number...')
 time.sleep(2)
 driver.find_element_by_name('booknumber').clear()
 time.sleep(1)
 ab_num_serie = driver.find_element_by_name('booknumber')
 
 if num_serie == '':
-    print('INFO: No Series Number...')
+    logger_internet.warning('Series number not found...')
     ab_num_serie.send_keys('')
 else:
     num_serie = num_serie.replace("Book ", "")
@@ -1230,6 +1242,7 @@ time.sleep(2)
 
 
 # Write Author---------------------------------------------------------
+logger_internet.info('Writing Author...')
 pyautogui.press('tab', presses=1)
 # driver.find_element_by_name("author[]").click()  # This opens the windows file selector
 pyautogui.write(nfo_author)
@@ -1238,6 +1251,7 @@ pyautogui.press('enter')
 # END Write author---------------------------------------------------------
 
 # narrator
+logger_internet.info('Writing Narrator...')
 pyautogui.press('tab')
 # #driver.find_element_by_name("narrator[]").click()  # This opens the windows file selector
 pyautogui.write(nfo_narr)
@@ -1247,16 +1261,16 @@ pyautogui.press('enter')
 # --------------------------------------------------------------------------
 
 # audiotype
-
+logger_internet.info('Writing audio type...')
 time.sleep(2)
 nfo_audio = nfo_audio.replace('audio/', '').upper()
 if nfo_audio == 'MP4':
     nfo_audio = 'M4B'
-
-print('INFO: File type:', nfo_audio)
+logger_internet.info('File type:')
+print('INFO: File type: %s', nfo_audio)
 if not nfo_audio:
     nfo_audio = "MP3"
-    print('INFO: File type was replace by default:', nfo_audio)
+    logger_internet.info('File type was replace by the default: %s', nfo_audio)
 
 driver.find_element_by_xpath("//select[@name='audiotype']/option[text()='" + nfo_audio + "']").click()
 
@@ -1272,6 +1286,7 @@ driver.find_element_by_xpath("//select[@name='audiotype']/option[text()='" + nfo
 
 # --------------------------------------------------------------------------
 # bitrate
+logger_internet.info('Writing bitrate...')
 time.sleep(2)
 # add kbps to output
 kbps = 'kbps'
@@ -1317,7 +1332,7 @@ else:
 time.sleep(2)
 # --------------------------------------------------------------------------
 # Description box
-
+logger_internet.info('Writing to description box...')
 # create a file to write the metadata
 meta = codecs.open('metadata_' + nfo_album + '.txt', 'w', 'utf-8-sig')
 meta.write('[center]')
@@ -1423,6 +1438,7 @@ time.sleep(3)
 
 # --------------------------------------------------------------------------
 # Genre
+logger_internet.info('Writing Genre...')
 list_romance = ['Romance']
 if re.compile('|'.join(list_romance), re.IGNORECASE).search(
         nfo_genre):  # re.IGNORECASE is used to ignore case
@@ -1500,11 +1516,11 @@ else:
 
 # delete the metadata txt file
 time.sleep(2)
-print('INFO CLEAN: Delete .txt file.')
+logger_internet.info('The .txt file was deleted...')
 if os.path.exists(file):
     os.remove(file)
 else:
-    print("INFO CLEAN: The metadata txt file does not exist")
+    logger_internet.info('The metadata txt file does not exist...')
 
 #     # Move files
 # # Passar o folder do torrent para o o disco dos torrents para semear bem
