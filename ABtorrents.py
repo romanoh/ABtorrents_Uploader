@@ -368,9 +368,9 @@ if file_path == '':
                         try:
                             nfo_album = nfo_album2[1]
                             nfo_series = nfo_album2[0]
-                            logger_nfo.info('Found Book Title: %s', nfo_album)
+                            logger_nfo.info('Found Book Title: %s', nfo_album.rstrip("\n"))
                         except:
-                            logger_nfo.info('Found Book Title: %s', nfo_album)
+                            logger_nfo.info('Found Book Title: %s', nfo_album.rstrip("\n"))
 
         if nfo_album == '':
             logger_nfo.warning('Book Title not found.')
@@ -389,7 +389,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_author = re.sub(r'^[^:]*:', r'', nfo_author).lstrip().title()
-                        logger_nfo.info('Author Found: %s', nfo_author)
+                        logger_nfo.info('Author Found: %s', nfo_author.rstrip("\n"))
         if nfo_author == '':
             logger_nfo.warning('Author not found.')
 
@@ -407,7 +407,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_narr = re.sub(r'^[^:]*:', r'', nfo_narr).lstrip().title()
-                        logger_nfo.info('Narrator Found: %s', nfo_narr)
+                        logger_nfo.info('Narrator Found: %s', nfo_narr.rstrip("\n"))
         if nfo_narr == '':
             logger_nfo.warning('Narrator not found.')
 
@@ -426,7 +426,7 @@ if file_path == '':
 
                             # remove everything before :
                             nfo_series = re.sub(r'^[^:]*:', r'', nfo_series).lstrip().title()
-                            logger_nfo.info('Series Found: %s', nfo_series)
+                            logger_nfo.info('Series Found: %s', nfo_series.rstrip("\n"))
                         else:
                             pass
 
@@ -437,7 +437,7 @@ if file_path == '':
             try:
                 num_serie2 = nfo_series.split(' Book ')
                 num_serie = num_serie2[1]
-                logger_nfo.info('Series number found: %s', num_serie)
+                logger_nfo.info('Series number found: %s', num_serie.rstrip("\n"))
             except:
                 logger_nfo.warning('Series number not Found!')
 
@@ -464,7 +464,7 @@ if file_path == '':
 
                             # remove everything before :
                             num_serie = re.sub(r'^[^:]*:', r'', num_serie).lstrip().title()
-                            logger_nfo.info('Narrator Found: %s', num_serie)
+                            logger_nfo.info('Series number Found: %s', num_serie.rstrip("\n"))
             if num_serie == '':
                 logger_nfo.warning('Series number not found.')
         else:
@@ -484,7 +484,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_genre = re.sub(r'^[^:]*:', r'', nfo_genre).lstrip().title()
-                        logger_nfo.info('Genre Found: %s', nfo_genre)
+                        logger_nfo.info('Genre Found: %s', nfo_genre.rstrip("\n"))
         if nfo_genre == '':
             logger_nfo.warning('Genre not found.')
 
@@ -502,7 +502,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_copy = re.sub(r'^[^:]*:', r'', nfo_copy).lstrip().title()
-                        logger_nfo.info('Copyright Found: %s', nfo_copy)
+                        logger_nfo.info('Copyright Found: %s', nfo_copy.rstrip("\n"))
         if nfo_copy == '':
             logger_nfo.warning('Copyright not found.')
 
@@ -520,7 +520,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_duration = re.sub(r'^[^:]*:', r'', nfo_duration).lstrip().title()
-                        logger_nfo.info('Duration Found: %s', nfo_duration)
+                        logger_nfo.info('Duration Found: %s', nfo_duration.rstrip("\n"))
         if nfo_duration == '':
             logger_nfo.warning('Duration not found.')
 
@@ -538,7 +538,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_publisher = re.sub(r'^[^:]*:', r'', nfo_publisher).lstrip().title()
-                        logger_nfo.info('Publisher Found: %s', nfo_publisher)
+                        logger_nfo.info('Publisher Found: %s', nfo_publisher.rstrip("\n"))
         if nfo_publisher == '':
             logger_nfo.warning('Publisher not found.')
 
@@ -556,7 +556,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_unabridged = re.sub(r'^[^:]*:', r'', nfo_unabridged).lstrip().title()
-                        logger_nfo.info('Unbridged Found: %s', nfo_unabridged)
+                        logger_nfo.info('Unbridged Found: %s', nfo_unabridged.rstrip("\n"))
         if nfo_unabridged == '':
             logger_nfo.warning('Unbridged not found.')
 
@@ -576,7 +576,7 @@ if file_path == '':
                         if not nfo_release:
                             pass
                         else:
-                            logger_nfo.info('Release Found: %s', nfo_release)
+                            logger_nfo.info('Release Found: %s', nfo_release.rstrip("\n"))
         if nfo_release == '':
             logger_nfo.warning('Release not found.')
 
@@ -594,7 +594,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_size = re.sub(r'^[^:]*:', r'', nfo_size).lstrip().title()
-                        logger_nfo.info('Size Found: %s', nfo_size)
+                        logger_nfo.info('Size Found: %s', nfo_size.rstrip("\n"))
         if nfo_size == '':
             logger_nfo.warning('Size not found.')
 
@@ -612,7 +612,7 @@ if file_path == '':
 
                         # remove everything before :
                         nfo_url = re.sub(r'^[^:]*:', r'', nfo_url).lstrip().title()
-                        logger_nfo.info('Url Found: %s', nfo_url)
+                        logger_nfo.info('Url Found: %s', nfo_url.rstrip("\n"))
         if nfo_url == '':
             logger_nfo.warning('Url Not Found.')
 
@@ -631,7 +631,7 @@ if file_path == '':
                     join = re.sub(r' ==', r'', join)
                     nfo_desc = join
                     # logger_nfo.info('Description: %s', join)
-                    logger_nfo.info('Description Found: %s', nfo_desc)
+                    logger_nfo.info('Description Found: %s', nfo_desc.rstrip("\n"))
                 # else:
                 # print('No description found.')
 
