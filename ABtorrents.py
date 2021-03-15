@@ -745,9 +745,6 @@ else:
             logger_meta.info('Author: %s', nfo_author)
         except:
             logger_meta.warning('This Audiobook as No Author, probably no tags are present.')
-            logger_meta.error('No need for this script. Quiting.')
-            input("Press Enter to Quit...")
-            sys.exit()
 
         # Narrator/composer
         try:
@@ -765,13 +762,13 @@ else:
             pass
 
         # Genre
-        try:
-            if nfo_genre == 'Audiobook':
-                pass
-            else:
+        if nfo_genre == 'Audiobook' or nfo_genre == '':
+            try:
                 nfo_genre = audio['TCON'].text[0]
                 logger_meta.info('Genre: %s', nfo_genre)
-        except:
+            except:
+                pass
+        else:
             logger_meta.info('No GENRE found.')
 
         # Year
@@ -910,15 +907,22 @@ else:
         except:
             logger_meta2.warning('Narrator not found.')
 
+        # if author iqual to narrator get data from nfo.
+        if nfo_author == nfo_narr:
+            nfo_author = nfo_author2
+            logger_meta2.warning('Author the same as narrator, getting data from nfo file.')
+        else:
+            pass
+
         # Genre
-        try:
-            nfo_genre = mp4_audio['\xa9gen']
-            if nfo_genre == 'Audiobook':
-                pass
-            else:
+        if nfo_genre == 'Audiobook' or nfo_genre == '':
+            try:
+                nfo_genre = mp4_audio['\xa9gen']
                 logger_meta2.info('Genre: %s', nfo_genre[0])
                 nfo_genre = nfo_genre[0]
-        except:
+            except:
+                pass
+        else:
             logger_meta2.warning('Genre not found.')
 
         # Year
