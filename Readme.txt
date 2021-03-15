@@ -30,7 +30,7 @@ add more than one author and narrator.
 improve system to enter sit with password and username.
 other internet explorers, just not firefox.
 getting the data for metadata from torrent site.
-get metadata from nfo if present else get it from audiofile.
+get metadata from nfo if present else get it from audiofile: done.
 
 
 

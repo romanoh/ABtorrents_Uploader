@@ -76,13 +76,14 @@ nfo_unabridged = ''
 nfo_release = ''
 nfo_size = ''
 nfo_url = ''
+nfo_notes = ''
 
 
 # If error pauses script---------------------------------------------------
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
     traceback.print_exception(exc_type, exc_value, tb)
-    input("Press key and enter to exit.")
+    input("Press any key and enter to exit.")
     sys.exit(-1)
 
 
@@ -388,8 +389,8 @@ if file_path == '':
                         nfo_author = line
 
                         # remove everything before :
-                        nfo_author = re.sub(r'^[^:]*:', r'', nfo_author).lstrip().title()
-                        logger_nfo.info('Author Found: %s', nfo_author.rstrip("\n"))
+                        nfo_author2 = re.sub(r'^[^:]*:', r'', nfo_author).lstrip().title()
+                        logger_nfo.info('Author Found: %s', nfo_author2.rstrip("\n"))
         if nfo_author == '':
             logger_nfo.warning('Author not found.')
 
@@ -447,6 +448,8 @@ if file_path == '':
             nfo_series = re.sub(r' Book 4', r'', nfo_series)
             nfo_series = re.sub(r' Book 5', r'', nfo_series)
             nfo_series = re.sub(r' Book 6', r'', nfo_series)
+            nfo_series = re.sub(r' Book 7', r'', nfo_series)
+            nfo_series = re.sub(r' Book 8', r'', nfo_series)
             logger_nfo.info('Series Found: %s', nfo_series)
 
         if num_serie == '':
@@ -616,6 +619,24 @@ if file_path == '':
         if nfo_url == '':
             logger_nfo.warning('Url Not Found.')
 
+        # Book notes
+        _notes = ["Note(s):", "Note(s)..", "Note:"]
+        logger_nfo.info('Searching Notes...')
+        with open(nfofile, "r+") as file1:
+            fileline1 = file1.readlines()
+            for x in _notes:  # <--- Loop through the list to check
+                for line in fileline1:  # <--- Loop through each line
+                    line = line.casefold()  # <--- Set line to lowercase
+                    if x.casefold() in line:
+                        logger_nfo.info('Line found with word: %s', x)
+                        nfo_notes = line
+
+                        # remove everything before :
+                        nfo_notes = re.sub(r'^[^:]*:', r'', nfo_notes).lstrip().title()
+                        logger_nfo.info('Note Found: %s', nfo_notes.rstrip("\n"))
+        if nfo_notes == '':
+            logger_nfo.warning('Note Not Found.')
+
         # Description
         copy = False
         with open(nfofile, "r") as saveoutput:
@@ -736,6 +757,12 @@ else:
             logger_meta.info('Narrator: %s', nfo_narr)
         except:
             logger_meta.info('Narrator not found.')
+
+        # if author iqual to narrator get data from nfo.
+        if nfo_author == nfo_narr:
+            nfo_author = nfo_author2
+        else:
+            pass
 
         # Genre
         try:
@@ -1186,14 +1213,14 @@ except:
 # END Change Torrent Name
 
 
-# Select torrent file
+# Select torrent file --------------------------------------------------------
 logger_internet.info('Uploading .torrent file...')
 file_upload = WebDriverWait(driver, 3).until(
     EC.presence_of_element_located((By.ID, "torrent"))
 )
 file_upload.send_keys(os.path.abspath(b_path))
 
-# END Torrent file ------------------------------------------------------------
+# END Torrent file -----------------------------------------------------------
 
 
 # Cover image upload----------------------------------------------------------
@@ -1266,8 +1293,7 @@ time.sleep(2)
 nfo_audio = nfo_audio.replace('audio/', '').upper()
 if nfo_audio == 'MP4':
     nfo_audio = 'M4B'
-logger_internet.info('File type:')
-print('INFO: File type: %s', nfo_audio)
+
 if not nfo_audio:
     nfo_audio = "MP3"
     logger_internet.info('File type was replace by the default: %s', nfo_audio)
@@ -1333,18 +1359,20 @@ time.sleep(2)
 # --------------------------------------------------------------------------
 # Description box
 logger_internet.info('Writing to description box...')
+
 # create a file to write the metadata
 meta = codecs.open('metadata_' + nfo_album + '.txt', 'w', 'utf-8-sig')
+
 meta.write('[center]')
 meta.write(
-    '[color=#FF9933]...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...[/color]' + '\n')
+    '[color=#FF9933]\U00002B50...::**::... [/color][font=Comic Sans MS][size=5][color=#CCFF00]' + nfo_album + '[/color][/size][/font][color=#FF9933] ...::**::...\U00002B50[/color]' + '\n')
 
 if nfo_sub == '':
     pass
 else:
     meta.write('[color=#CCFF00]' + nfo_sub + '[/color]' + '\n' + '\n')
 
-meta.write('✍️Author: ' + nfo_author + '\n')
+meta.write('Author: ' + nfo_author + '\n')
 meta.write('Narrator: ' + nfo_narr + '\n')
 meta.write('Genre: ' + nfo_genre + '\n')
 meta.write('Year: ' + str(nfo_year) + '\n')
@@ -1362,27 +1390,32 @@ else:
 if nfo_publisher == '':
     pass
 else:
-    meta.write('Publisher: ' + nfo_publisher + '\n')
+    meta.write('Publisher: ' + nfo_publisher)
 
 if nfo_copy == '':
     pass
 else:
-    meta.write('© Copyright: ' + nfo_copy + '\n')
+    meta.write('Copyright: ' + nfo_copy)
 
 if nfo_unabridged == '':
     pass
 else:
-    meta.write('Unabridged: ' + nfo_unabridged + '\n')
+    meta.write('Unabridged: ' + nfo_unabridged)
 
 if nfo_release == '':
     pass
 else:
-    meta.write('Release: ' + nfo_release + '\n')
+    meta.write('Release: ' + nfo_release)
 
 if nfo_size == '':
     pass
 else:
-    meta.write('Size: ' + nfo_size + '\n')
+    meta.write('Size: ' + nfo_size)
+
+if nfo_notes == '':
+    pass
+else:
+    meta.write('Notes(s): ' + nfo_notes)
 
 if nfo_comm == '':
     pass
@@ -1395,15 +1428,15 @@ else:
 if nfo_link == '':
     pass
 else:
-    meta.write('⚓ Link: ' + nfo_link + '\n' + '\n')
+    meta.write('Link: ' + nfo_link + '\n' + '\n')
 
 if nfo_url == '':
     pass
 else:
-    meta.write('⚓ Url: ' + nfo_url + '\n' + '\n')
+    meta.write('Url: ' + nfo_url + '\n' + '\n')
 
 meta.write(
-    '\n' + '[color=#FF9933]...::**::... [/color][color=#faa702][size=5][b]Book Description[/b][/size][/color][color=#FF9933]...::**::...[/color]' + '\n' + '\n')
+    '\n' + '[color=#FF9933]\U00002B50...::**::... [/color][color=#faa702][size=5][b]Book Description[/b][/size][/color][color=#FF9933]...::**::...\U00002B50[/color]' + '\n' + '\n')
 meta.write(str(nfo_desc) + '\n' + '\n')
 
 if nfo_series == '':
@@ -1436,8 +1469,7 @@ elem = driver.find_element_by_xpath(
 elem.send_keys(data, '\n')
 time.sleep(3)
 
-# --------------------------------------------------------------------------
-# Genre
+# Genre --------------------------------------------------------------------
 logger_internet.info('Writing Genre...')
 list_romance = ['Romance']
 if re.compile('|'.join(list_romance), re.IGNORECASE).search(
@@ -1512,9 +1544,7 @@ else:
     nfo_genre = 'Horror'
     driver.find_element_by_xpath("//select[@name='type']/option[text()='" + nfo_genre + "']").click()
 
-# --------------------------------------------------------------------------
-
-# delete the metadata txt file
+# Delete the metadata txt file ---------------------------------------------
 time.sleep(2)
 logger_internet.info('The .txt file was deleted...')
 if os.path.exists(file):
@@ -1522,7 +1552,7 @@ if os.path.exists(file):
 else:
     logger_internet.info('The metadata txt file does not exist...')
 
-#     # Move files
+# Move files ---------------------------------------------------------------
 # # Passar o folder do torrent para o o disco dos torrents para semear bem
 # print('INFO: Moving the files/folder to the torrent folder to seed T:')
 # time.sleep(4)
