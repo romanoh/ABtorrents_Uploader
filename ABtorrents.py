@@ -343,7 +343,9 @@ def find_files(directory, pattern):
 
 if file_path == '':
     for nfofile in find_files(folder_path, '*.nfo'):
-        logger_nfo.info('Found NFO audio source: %s', nfofile)
+        logger_nfo.info('Found NFO metadata source: %s', nfofile)
+    for nfofile in find_files(folder_path, '*.txt'):
+        logger_nfo.info('Found TXT metadata source: %s', nfofile)
 
     if nfofile is None:
         logger_nfo.warning('NFO file not present...')
@@ -409,6 +411,16 @@ if file_path == '':
                         # remove everything before :
                         nfo_narr = re.sub(r'^[^:]*:', r'', nfo_narr).lstrip().title()
                         logger_nfo.info('Narrator Found: %s', nfo_narr.rstrip("\n"))
+                        # if two narrators
+                        try:
+                            nfo_split_narr = nfo_narr.split(", ")
+                            print(nfo_split_narr[0])
+                        except:
+                            pass
+                        
+
+
+
         if nfo_narr == '':
             logger_nfo.warning('Narrator not found.')
 
@@ -752,6 +764,11 @@ else:
             # correct format of narrator(ex: A. B. Mark)
             nfo_narr = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_narr)
             logger_meta.info('Narrator: %s', nfo_narr)
+            try:
+                nfo_split_narr = nfo_narr.split(", ")
+                print(nfo_split_narr[0])
+            except:
+                pass
         except:
             logger_meta.info('Narrator not found.')
 
@@ -904,6 +921,11 @@ else:
             nfo_narr = nfo_narr[0]
             # correct format of narrator(ex: A. B. Mark)
             nfo_narr = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_narr)
+            try:
+                nfo_split_narr = nfo_narr.split(", ")
+                print(nfo_split_narr[0])
+            except:
+                pass
         except:
             logger_meta2.warning('Narrator not found.')
 

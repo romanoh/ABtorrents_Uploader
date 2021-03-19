@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 Beta v.0.3 - [UNRELEASED]
+[19.03.21] STR: Starting on adding more than one narrator.
+[19.03.21] NEW: Added txt file for metadata if nfo not present.
 [15.03.21] CHG: if genre tag is Audiobook get tag from audio file.
 [15.03.21] CHG: if author equal to narrator get data from nfo.
 [12.03.21] CHG: Small improvements to description.
