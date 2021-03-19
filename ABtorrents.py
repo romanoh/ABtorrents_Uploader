@@ -83,7 +83,7 @@ nfo_notes = ''
 def show_exception_and_exit(exc_type, exc_value, tb):
     import traceback
     traceback.print_exception(exc_type, exc_value, tb)
-    input("Press any key and enter to exit.")
+    input("An error as appeared, press any key and enter to exit.")
     sys.exit(-1)
 
 
@@ -113,7 +113,7 @@ if not os.path.exists('config.ini'):  # if it is not present
     config['LOGIN']['username'] = "0"
     config['LOGIN']['password'] = "0"
 
-    logger_config.info('Ini Config file was created.')
+    logger_config.info('Ini Config file was created: config.ini')
 
     config.write(open('config.ini', 'w'))
 
@@ -124,7 +124,7 @@ if not os.path.exists('config.ini'):  # if it is not present
     login_password = config['LOGIN']['password']
 else:
     # if config file present:
-    logger_config.info('The config.ini is present.')
+    logger_config.info('The config.ini file is present.')
 
     config.read(r'config.ini')
 
@@ -348,7 +348,7 @@ if file_path == '':
         logger_nfo.info('Found TXT metadata source: %s', nfofile)
 
     if nfofile is None:
-        logger_nfo.warning('NFO file not present...')
+        logger_nfo.warning('NFO file is not present...')
         nfofile = "No NFO present"
     else:
         # Book Title
@@ -414,12 +414,13 @@ if file_path == '':
                         # if two narrators
                         try:
                             nfo_split_narr = nfo_narr.split(", ")
+                            nfo_split_narr1 = nfo_split_narr[0]
+                            nfo_split_narr2 = nfo_split_narr[1]
+                            nfo_split_narr3 = nfo_split_narr[2]
+                            nfo_split_narr4 = nfo_split_narr[3]
                             print(nfo_split_narr[0])
                         except:
                             pass
-                        
-
-
 
         if nfo_narr == '':
             logger_nfo.warning('Narrator not found.')
@@ -766,7 +767,12 @@ else:
             logger_meta.info('Narrator: %s', nfo_narr)
             try:
                 nfo_split_narr = nfo_narr.split(", ")
+                nfo_split_narr1 = nfo_split_narr[0]
+                nfo_split_narr2 = nfo_split_narr[1]
+                nfo_split_narr3 = nfo_split_narr[2]
+                nfo_split_narr4 = nfo_split_narr[3]
                 print(nfo_split_narr[0])
+
             except:
                 pass
         except:
@@ -923,6 +929,10 @@ else:
             nfo_narr = re.sub(r'(?<=[A-Z])\.?\s?(?![a-z])', r'. ', nfo_narr)
             try:
                 nfo_split_narr = nfo_narr.split(", ")
+                nfo_split_narr1 = nfo_split_narr[0]
+                nfo_split_narr2 = nfo_split_narr[1]
+                nfo_split_narr3 = nfo_split_narr[2]
+                nfo_split_narr4 = nfo_split_narr[3]
                 print(nfo_split_narr[0])
             except:
                 pass
@@ -1202,21 +1212,50 @@ author_button.click()
 time.sleep(4)
 
 # Narrator internet--------------------------------------------------------------------------
-# Change to narrator Link
-narrator_button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[4]/a")
-narrator_button.click()
-logger_internet.info('Adding the Narrator to the database...')
-time.sleep(4)
 
-# Writing Narrator
-narrator_name = driver.find_element_by_name('add_narrator')
-narrator_name.send_keys(nfo_narr)
-time.sleep(3)
+if nfo_split_narr:
+    # Change to narrator Link
+    narrator_button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[4]/a")
+    narrator_button.click()
+    logger_internet.info('Adding the Narrator to the database...')
+    time.sleep(4)
 
-# Pressing X to load
-nextButton3 = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/form/h3[4]/input[2]")
-nextButton3.click()
-time.sleep(4)
+    # Writing Narrator
+    narrator_name = driver.find_element_by_name('add_narrator')
+    narrator_name.send_keys(nfo_split_narr1)
+    time.sleep(3)
+
+    # Pressing X to load
+    nextButton3 = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/form/h3[4]/input[2]")
+    nextButton3.click()
+    time.sleep(4)
+
+    # Writing Narrator
+    narrator_name = driver.find_element_by_name('add_narrator')
+    narrator_name.send_keys(nfo_split_narr2)
+    time.sleep(3)
+
+    # Pressing X to load
+    nextButton3 = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/form/h3[4]/input[2]")
+    nextButton3.click()
+    time.sleep(4)
+else:
+
+    # Change to narrator Link
+    narrator_button = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/div/ul/li[4]/a")
+    narrator_button.click()
+    logger_internet.info('Adding the Narrator to the database...')
+    time.sleep(4)
+
+    # Writing Narrator
+    narrator_name = driver.find_element_by_name('add_narrator')
+    narrator_name.send_keys(nfo_narr)
+    time.sleep(3)
+
+    # Pressing X to load
+    nextButton3 = driver.find_element_by_xpath("/html/body/div/div[1]/table/tbody/tr/td/form/h3[4]/input[2]")
+    nextButton3.click()
+    time.sleep(4)
 # END Narrator internet--------------------------------------------------------------------------
 
 # Change to Upload Page--------------------------------------------------------
@@ -1304,12 +1343,28 @@ pyautogui.press('enter')
 # END Write author---------------------------------------------------------
 
 # narrator
-logger_internet.info('Writing Narrator...')
+logger_internet.info('Writing Narrator(s)...')
 pyautogui.press('tab')
 # #driver.find_element_by_name("narrator[]").click()  # This opens the windows file selector
-pyautogui.write(nfo_narr)
-time.sleep(4)
-pyautogui.press('enter')
+if nfo_split_narr:
+    pyautogui.write(nfo_split_narr1)
+    time.sleep(4)
+    pyautogui.press('enter')
+    time.sleep(2)
+    pyautogui.write(nfo_split_narr2)
+    time.sleep(2)
+    pyautogui.press('enter')
+    time.sleep(2)
+    try:
+        pyautogui.write(nfo_split_narr3)
+        time.sleep(2)
+        pyautogui.press('enter')
+    except:
+        pass
+else:
+    pyautogui.write(nfo_narr)
+    time.sleep(4)
+    pyautogui.press('enter')
 
 # --------------------------------------------------------------------------
 
@@ -1399,7 +1454,13 @@ else:
     meta.write('[color=#CCFF00]' + nfo_sub + '[/color]' + '\n' + '\n')
 
 meta.write('Author: ' + nfo_author + '\n')
-meta.write('Narrator: ' + nfo_narr + '\n')
+
+if nfo_split_narr:
+    meta.write('Narrator: ' + nfo_split_narr1 + '\n')
+    meta.write('Narrator: ' + nfo_split_narr2 + '\n')
+else:
+    meta.write('Narrator: ' + nfo_narr + '\n')
+
 meta.write('Genre: ' + nfo_genre + '\n')
 meta.write('Year: ' + str(nfo_year) + '\n')
 
